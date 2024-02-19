@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34525.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thermostat", "Team03_SmartHome\Thermostat.csproj", "{B285738E-FFDF-4A32-851A-6B6E5620F52E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B285738E-FFDF-4A32-851A-6B6E5620F52E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B285738E-FFDF-4A32-851A-6B6E5620F52E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B285738E-FFDF-4A32-851A-6B6E5620F52E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B285738E-FFDF-4A32-851A-6B6E5620F52E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8D15B4EB-08AC-44CE-BC56-089ABFB7C186}
+	EndGlobalSection
+EndGlobal
