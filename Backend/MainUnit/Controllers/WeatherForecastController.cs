@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Team03_SmartHome.Controllers
+namespace MainUnit.Controllers
 {
     [ApiController]
     [Route("[controller]")]
