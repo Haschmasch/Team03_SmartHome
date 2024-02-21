@@ -6,5 +6,6 @@ namespace MainUnit.Services.Interfaces
     {
         public void AddThermostat(ThermostatWithURL thermostat);
         public Thermostat GetThermostat(int id);
+        public List<ThermostatWithURL> GetThermostats(int skip, int limit);
     }
 }

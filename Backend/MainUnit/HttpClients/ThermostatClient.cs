@@ -20,7 +20,7 @@ namespace MainUnit.HttpClients
                 .Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public async Task<ThermostatWithURL> UpdateThermostat(ThermostatWithURL thermostatWithURL)
+        public async Task<ThermostatWithURL> UpdateThermostatAsync(ThermostatWithURL thermostatWithURL)
         {
             //TODO Change API Route to route of thermostat
             HttpResponseMessage response = await _httpClient.PutAsJsonAsync(

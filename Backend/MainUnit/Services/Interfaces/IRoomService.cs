@@ -4,7 +4,7 @@ namespace MainUnit.Services.Interfaces
 {
     public interface IRoomService
     {
-        public void AddRoom(Room room);
+        public Room AddRoom(Room room);
         public void RemoveRoom(int id);
         List<Room> GetRooms(int skip, int limit);
         public Room UpdateRoom(Room room);

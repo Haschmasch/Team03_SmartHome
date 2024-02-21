@@ -1,4 +1,5 @@
-﻿using MainUnit.HttpClients;
+﻿using MainUnit.Controllers;
+using MainUnit.HttpClients;
 using MainUnit.Models;
 using MainUnit.Models.Exceptions;
 using MainUnit.Models.Settings;
@@ -15,13 +16,13 @@ namespace MainUnit.Services
     {
         private readonly IMongoCollection<Room> _roomCollection;
         private readonly IMongoCollection<ThermostatWithURL> _thermostatCollection;
-
+        private readonly IMongoCollection<RoomTemperatureEntry> _roomTemperatureEntries;
 
         public RoomService(IOptions<MongoDbSettings> settings)
         {
             var mongoClient = new MongoClient(
                 settings.Value.ConnectionString);
-
+           
             var mongoDatabase = mongoClient.GetDatabase(
                 settings.Value.DatabaseName);
 
@@ -30,11 +31,20 @@ namespace MainUnit.Services
 
             _thermostatCollection = mongoDatabase.GetCollection<ThermostatWithURL>(
                 settings.Value.ThermostatCollectionName);
+
+            _roomTemperatureEntries = mongoDatabase.GetCollection<RoomTemperatureEntry>(
+                settings.Value.RoomTemperatureCollectionName);
         }
 
-        public void AddRoom(Room room)
+        public Room AddRoom(Room room)
         {
-            _roomCollection.InsertOne(room);
+            var result = _roomCollection.Find(t => t.Id == room.Id);
+            if (result == null || !result.Any())
+            {
+                _roomCollection.InsertOne(room);
+                return room;
+            }
+            return null;
         }
 
         public List<Room> GetRooms(int skip, int limit)
@@ -67,6 +77,13 @@ namespace MainUnit.Services
 
         public void RemoveRoom(int id)
         {
+            //Check if room exists
+            var roomResult = _roomCollection.Find(r => r.Id == id);
+            if (roomResult == null || !roomResult.Any())
+            {
+                throw new RoomNotFoundException($"Room {id} not found,");
+            }
+
             _roomCollection.DeleteOne(x => x.Id == id);
         }
 
@@ -74,17 +91,17 @@ namespace MainUnit.Services
         {
             //Check if room exists
             var roomResult = _roomCollection.Find(r => r.Id == roomId);
-            if (roomResult == null)
+            if (roomResult == null || !roomResult.Any())
             {
-                throw new RoomNotFoundException($"Room {roomId} not found");
+                throw new RoomNotFoundException($"Room {roomId} not found.");
             }
             var room = roomResult.FirstOrDefault();
 
             //Check if thermostat exists
             var thermostatResult = _thermostatCollection.Find(t => t.Id == thermostatId);
-            if (thermostatResult == null)
+            if (thermostatResult == null || !thermostatResult.Any())
             {
-                throw new ThermostatNotFoundException($"Thermostat {thermostatId} not found");
+                throw new ThermostatNotFoundException($"Thermostat {thermostatId} not found.");
             }
 
 
@@ -122,7 +139,7 @@ namespace MainUnit.Services
                 }
                 client = new ThermostatClient(thermostat.URL);
                 thermostat.Temperature = temperature;
-                client.UpdateThermostat(thermostat);
+                _ = client.UpdateThermostatAsync(thermostat);
             }
 
             //Update and return room
@@ -130,6 +147,18 @@ namespace MainUnit.Services
             FilterDefinition<Room> filter = Builders<Room>.Filter.Eq(r => r.Id, roomId);
             UpdateDefinition<Room> update = Builders<Room>.Update.Set("Temperature", temperature);
             _roomCollection.UpdateOne(filter, update);
+
+            //Add temperature change to timeseries
+            _roomTemperatureEntries.InsertOne(new RoomTemperatureEntry() 
+            { 
+                Metadata = new RoomTempMetadataEntry()
+                {
+                    Id = roomId,
+                    ThermostatIds = room.ThermostatIds
+                },
+                Temperature = temperature 
+            });
+
             return room;
         }
     }

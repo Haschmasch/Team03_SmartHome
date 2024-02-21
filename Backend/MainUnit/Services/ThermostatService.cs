@@ -1,8 +1,10 @@
 ﻿using MainUnit.Models;
+using MainUnit.Models.Exceptions;
 using MainUnit.Models.Settings;
 using MainUnit.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace MainUnit.Services
 {
@@ -25,7 +27,19 @@ namespace MainUnit.Services
 
         public void AddThermostat(ThermostatWithURL thermostat)
         {
-            _thermostatCollection.InsertOne(thermostat);
+            var result = _thermostatCollection.Find(t => t.Id == thermostat.Id);
+            if(result == null || !result.Any()) 
+            {
+                _thermostatCollection.InsertOne(thermostat);
+            }
+            throw new ThermostatExistsException($"Thermostat with id: {thermostat.Id} already exists");
+        }
+
+        public List<ThermostatWithURL> GetThermostats(int skip, int limit)
+        {
+            var result = _thermostatCollection.AsQueryable();
+            result = result.Skip(skip).Take(limit);
+            return result.ToList();
         }
 
         public Thermostat GetThermostat(int id)
@@ -36,7 +50,7 @@ namespace MainUnit.Services
             {
                 return result.FirstOrDefault();
             }
-            return null;
+            throw new ThermostatNotFoundException($"Thermostat with id: {id} not found");
         }
     }
 }
