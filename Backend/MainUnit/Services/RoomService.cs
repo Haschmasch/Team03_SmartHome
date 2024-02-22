@@ -1,10 +1,13 @@
 ﻿using MainUnit.Controllers;
 using MainUnit.HttpClients;
-using MainUnit.Models;
 using MainUnit.Models.Exceptions;
+using MainUnit.Models.Room;
+using MainUnit.Models.RoomTemperature;
 using MainUnit.Models.Settings;
+using MainUnit.Models.Thermostat;
 using MainUnit.Services.Interfaces;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Bson.IO;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -22,7 +25,7 @@ namespace MainUnit.Services
         {
             var mongoClient = new MongoClient(
                 settings.Value.ConnectionString);
-           
+
             var mongoDatabase = mongoClient.GetDatabase(
                 settings.Value.DatabaseName);
 
@@ -38,13 +41,8 @@ namespace MainUnit.Services
 
         public Room AddRoom(Room room)
         {
-            var result = _roomCollection.Find(t => t.Id == room.Id);
-            if (result == null || !result.Any())
-            {
-                _roomCollection.InsertOne(room);
-                return room;
-            }
-            return null;
+            _roomCollection.InsertOne(room);
+            return _roomCollection.Find(r => r.Id == room.Id).FirstOrDefault();
         }
 
         public List<Room> GetRooms(int skip, int limit)
@@ -54,15 +52,10 @@ namespace MainUnit.Services
             return result.ToList();
         }
 
-        public Room GetRoom(int id)
+        public Room GetRoom(string id)
         {
-            var result = _roomCollection.Find(t => t.Id == id);
-
-            if (result != null && result.Any())
-            {
-                return result.FirstOrDefault();
-            }
-            throw new RoomNotFoundException($"Room {id} not found.");
+            var room = CheckRoomExists(id);
+            return room;
         }
 
         public Room UpdateRoom(Room room)
@@ -75,35 +68,18 @@ namespace MainUnit.Services
                 throw new RoomNotFoundException($"Room {room.Id} not found.");
         }
 
-        public void RemoveRoom(int id)
+        public void RemoveRoom(string id)
         {
-            //Check if room exists
-            var roomResult = _roomCollection.Find(r => r.Id == id);
-            if (roomResult == null || !roomResult.Any())
-            {
-                throw new RoomNotFoundException($"Room {id} not found,");
-            }
+            CheckRoomExists(id);
 
             _roomCollection.DeleteOne(x => x.Id == id);
         }
 
-        public Room AddThermostat(int roomId, int thermostatId)
+        public Room AddThermostat(string roomId, string thermostatId)
         {
-            //Check if room exists
-            var roomResult = _roomCollection.Find(r => r.Id == roomId);
-            if (roomResult == null || !roomResult.Any())
-            {
-                throw new RoomNotFoundException($"Room {roomId} not found.");
-            }
-            var room = roomResult.FirstOrDefault();
+            var room = CheckRoomExists(roomId);
 
-            //Check if thermostat exists
-            var thermostatResult = _thermostatCollection.Find(t => t.Id == thermostatId);
-            if (thermostatResult == null || !thermostatResult.Any())
-            {
-                throw new ThermostatNotFoundException($"Thermostat {thermostatId} not found.");
-            }
-
+            CheckThermostatExists(thermostatId);
 
             FilterDefinition<Room> filter = Builders<Room>.Filter.Eq(r => r.Id, roomId);
             UpdateDefinition<Room> update = Builders<Room>.Update.AddToSet(r => r.ThermostatIds, thermostatId);
@@ -115,31 +91,40 @@ namespace MainUnit.Services
                 throw new RoomNotFoundException($"Room {room.Id} not found.");
         }
 
-
-        public Room SetRoomTemperature(int roomId, float temperature)
+        public void RemoveThermostat(string roomId, string thermostatId)
         {
-            var result = _roomCollection.Find(t => t.Id == roomId);
+            var room = CheckRoomExists(roomId);
 
-            if (result == null || !result.Any())
-            {
-                throw new RoomNotFoundException($"Room {roomId} not found.");
-            }
+            CheckThermostatExists(thermostatId);
 
-            var room = result.FirstOrDefault();
+            room.ThermostatIds.Remove(thermostatId);
+
+            FilterDefinition<Room> filter = Builders<Room>.Filter.Eq(r => r.Id, roomId);
+            var result = _roomCollection.FindOneAndReplace(filter, room);
+
+            if (result == null)
+                throw new RoomNotFoundException($"Room {room.Id} not found.");
+        }
+
+        public Room SetRoomTemperature(string roomId, float temperature)
+        {
+            var room = CheckRoomExists(roomId);
 
             //Update individual thermostat temperatures by calling their API
             foreach (var id in room.ThermostatIds)
             {
                 var thermostat = _thermostatCollection.Find(t => t.Id == id).FirstOrDefault();
                 ThermostatClient client = null;
-                if (thermostat == null) 
+                if (thermostat == null)
                 {
-                    //TODO log or throw exception
+                    //No exception is thrown here, because this is mainly a paranoia check.
+                    //TODO add logging
                     continue;
                 }
                 client = new ThermostatClient(thermostat.URL);
                 thermostat.Temperature = temperature;
-                _ = client.UpdateThermostatAsync(thermostat);
+                var task = client.UpdateThermostatAsync(thermostat);
+                task.GetAwaiter().GetResult();
             }
 
             //Update and return room
@@ -149,17 +134,41 @@ namespace MainUnit.Services
             _roomCollection.UpdateOne(filter, update);
 
             //Add temperature change to timeseries
-            _roomTemperatureEntries.InsertOne(new RoomTemperatureEntry() 
-            { 
+            _roomTemperatureEntries.InsertOne(new RoomTemperatureEntry()
+            {
                 Metadata = new RoomTempMetadataEntry()
                 {
                     Id = roomId,
                     ThermostatIds = room.ThermostatIds
                 },
-                Temperature = temperature 
+                Temperature = temperature
             });
 
             return room;
+        }
+
+        private Room CheckRoomExists(string roomId)
+        {
+            var result = _roomCollection.Find(t => t.Id == roomId);
+
+            if (result == null || !result.Any())
+            {
+                throw new RoomNotFoundException($"Room {roomId} not found.");
+            }
+
+            return result.FirstOrDefault();
+        }
+
+        private Thermostat CheckThermostatExists(string thermostatId)
+        {
+            var result = _thermostatCollection.Find(t => t.Id == thermostatId);
+
+            if (result == null || !result.Any())
+            {
+                throw new ThermostatNotFoundException($"Room {thermostatId} not found.");
+            }
+
+            return result.FirstOrDefault();
         }
     }
 }

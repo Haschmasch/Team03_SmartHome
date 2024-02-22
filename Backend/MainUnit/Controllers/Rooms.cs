@@ -1,5 +1,5 @@
-﻿using MainUnit.Models;
-using MainUnit.Models.Exceptions;
+﻿using MainUnit.Models.Exceptions;
+using MainUnit.Models.Room;
 using MainUnit.Services;
 using MainUnit.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -30,9 +30,9 @@ namespace MainUnit.Controllers
             return Ok(rooms);
         }
 
-        // GET: api/Rooms/5
+        // GET: api/Rooms/507f1f77bcf86cd799439011
         [HttpGet("{id}")]
-        public ActionResult<Room> Get(int id)
+        public ActionResult<Room> Get(string id)
         {
             try
             {
@@ -75,9 +75,9 @@ namespace MainUnit.Controllers
             }
         }
 
-        // DELETE api/Rooms/5
+        // DELETE api/Rooms/507f1f77bcf86cd799439011
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             try
             {
@@ -91,9 +91,9 @@ namespace MainUnit.Controllers
 
         }
 
-        // PUT api/Rooms/5/Thermostats
+        // PUT api/Rooms/507f1f77bcf86cd799439011/Thermostats
         [HttpPut("{id}/Thermostats")]
-        public ActionResult<Room> AddThermostat(int id, [FromBody] int thermostatId)
+        public ActionResult<Room> AddThermostat(string id, [FromBody] string thermostatId)
         {
             try
             {
@@ -106,9 +106,24 @@ namespace MainUnit.Controllers
             }
         }
 
-        // PUT api/Rooms/5/Temperature
+        // PUT api/Rooms/507f1f77bcf86cd799439011/Thermostats
+        [HttpDelete("{id}/Thermostats")]
+        public ActionResult<Room> RemoveThermostat(string id, [FromBody] string thermostatId)
+        {
+            try
+            {
+                _roomService.RemoveThermostat(id, thermostatId);
+                return NoContent();
+            }
+            catch (Exception ex) when (ex is RoomNotFoundException || ex is ThermostatNotFoundException)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        // PUT api/Rooms/507f1f77bcf86cd799439011/Temperature
         [HttpPut("{id}/Temperature")]
-        public ActionResult<Room> UpdateTemperature(int id, [FromBody] float temperature)
+        public ActionResult<Room> UpdateTemperature(string id, [FromBody] float temperature)
         {
             try
             {

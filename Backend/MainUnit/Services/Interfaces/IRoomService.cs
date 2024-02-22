@@ -1,15 +1,16 @@
-﻿using MainUnit.Models;
+﻿using MainUnit.Models.Room;
 
 namespace MainUnit.Services.Interfaces
 {
     public interface IRoomService
     {
         public Room AddRoom(Room room);
-        public void RemoveRoom(int id);
+        public void RemoveRoom(string id);
         List<Room> GetRooms(int skip, int limit);
         public Room UpdateRoom(Room room);
-        public Room GetRoom(int id);
-        public Room AddThermostat(int roomId, int thermostatId);
-        public Room SetRoomTemperature(int roomId, float temperature);
+        public Room GetRoom(string id);
+        public Room AddThermostat(string roomId, string thermostatId);
+        public void RemoveThermostat(string roomId, string thermostatId);
+        public Room SetRoomTemperature(string roomId, float temperature);
     }
 }

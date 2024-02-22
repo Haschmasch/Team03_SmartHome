@@ -1,4 +1,4 @@
-﻿using MainUnit.Models;
+﻿using MainUnit.Models.RoomTemperature;
 using MainUnit.Models.Settings;
 using MainUnit.Services.Interfaces;
 using Microsoft.Extensions.Options;
@@ -27,12 +27,12 @@ namespace MainUnit.Services
             return _roomTemperatureEntries.Find(t => t.Timestamp >= start && t.Timestamp <= end).ToList();
         }
 
-        public List<RoomTemperatureEntry> GetTemperatureEntriesByRoom(int roomId, DateTime start, DateTime end)
+        public List<RoomTemperatureEntry> GetTemperatureEntriesByRoom(string roomId, DateTime start, DateTime end)
         {
             return _roomTemperatureEntries.Find(t => t.Timestamp >= start && t.Timestamp <= end && t.Metadata.Id == roomId).ToList();
         }
 
-        public List<RoomTemperatureEntry> GetTemperatureEntriesByThermostat(int thermostatId, DateTime start, DateTime end)
+        public List<RoomTemperatureEntry> GetTemperatureEntriesByThermostat(string thermostatId, DateTime start, DateTime end)
         {
             return _roomTemperatureEntries.Find(t => t.Timestamp >= start && t.Timestamp <= end && t.Metadata.ThermostatIds.Contains(thermostatId)).ToList();
         }

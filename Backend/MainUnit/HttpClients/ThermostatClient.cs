@@ -1,4 +1,4 @@
-﻿using MainUnit.Models;
+﻿using MainUnit.Models.Thermostat;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -24,10 +24,10 @@ namespace MainUnit.HttpClients
         {
             //TODO Change API Route to route of thermostat
             HttpResponseMessage response = await _httpClient.PutAsJsonAsync(
-            $"api/products/{thermostatWithURL.Id}", thermostatWithURL);
+            $"api/thermostat/{thermostatWithURL.Id}", thermostatWithURL);
             response.EnsureSuccessStatusCode();
 
-            // Deserialize the updated product from the response body.
+            // Deserialize the updated Thermostat from the response body.
             thermostatWithURL = await response.Content.ReadAsAsync<ThermostatWithURL>();
             return thermostatWithURL;
         }

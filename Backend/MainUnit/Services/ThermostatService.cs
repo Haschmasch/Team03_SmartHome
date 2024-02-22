@@ -1,6 +1,6 @@
-﻿using MainUnit.Models;
-using MainUnit.Models.Exceptions;
+﻿using MainUnit.Models.Exceptions;
 using MainUnit.Models.Settings;
+using MainUnit.Models.Thermostat;
 using MainUnit.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -35,14 +35,15 @@ namespace MainUnit.Services
             throw new ThermostatExistsException($"Thermostat with id: {thermostat.Id} already exists");
         }
 
-        public List<ThermostatWithURL> GetThermostats(int skip, int limit)
+        public List<Thermostat> GetThermostats(int skip, int limit)
         {
             var result = _thermostatCollection.AsQueryable();
             result = result.Skip(skip).Take(limit);
-            return result.ToList();
+
+            return new List<Thermostat>(result.ToList());
         }
 
-        public Thermostat GetThermostat(int id)
+        public Thermostat GetThermostat(string id)
         {
             var result = _thermostatCollection.Find(t => t.Id == id);
 

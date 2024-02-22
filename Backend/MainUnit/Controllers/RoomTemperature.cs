@@ -1,4 +1,4 @@
-﻿using MainUnit.Models;
+﻿using MainUnit.Models.RoomTemperature;
 using MainUnit.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,9 +31,9 @@ namespace MainUnit.Controllers
             return Ok(products);
         }
 
-        //GET: api/RoomTemperature?roomId=1&start=2012-12-31T22:00:00.000Z&end=2030-12-31T22:00:00.000Z
-        [HttpGet]
-        public ActionResult<List<RoomTemperatureEntry>> GetByRoomAndDate(int roomId, DateTime start, DateTime end)
+        //GET: api/RoomTemperature?roomId=507f1f77bcf86cd799439011&start=2012-12-31T22:00:00.000Z&end=2030-12-31T22:00:00.000Z
+        [HttpGet("ByRoom")]
+        public ActionResult<List<RoomTemperatureEntry>> GetByRoomAndDate(string roomId, DateTime start, DateTime end)
         {
             if (ValidateDate(start, end))
                 return BadRequest(dateValidationErrorText);
@@ -43,9 +43,9 @@ namespace MainUnit.Controllers
             return Ok(products);
         }
 
-        //GET: api/RoomTemperature?thermostatId=1&start=2012-12-31T22:00:00.000Z&end=2030-12-31T22:00:00.000Z
-        [HttpGet]
-        public ActionResult<List<RoomTemperatureEntry>> GetByThermostatAndDate(int thermostatId, DateTime start, DateTime end)
+        //GET: api/RoomTemperature?thermostatId=507f1f77bcf86cd799439011&start=2012-12-31T22:00:00.000Z&end=2030-12-31T22:00:00.000Z
+        [HttpGet("ByThermostat")]
+        public ActionResult<List<RoomTemperatureEntry>> GetByThermostatAndDate(string thermostatId, DateTime start, DateTime end)
         {
             if (ValidateDate(start, end))
                 return BadRequest(dateValidationErrorText);

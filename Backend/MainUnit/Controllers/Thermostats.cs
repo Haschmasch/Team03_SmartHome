@@ -1,5 +1,5 @@
-﻿using MainUnit.Models;
-using MainUnit.Models.Exceptions;
+﻿using MainUnit.Models.Exceptions;
+using MainUnit.Models.Thermostat;
 using MainUnit.Services;
 using MainUnit.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -30,9 +30,9 @@ namespace MainUnit.Controllers
             return Ok(thermostats);
         }
 
-        // GET: api/Thermostats/5
+        // GET: api/Thermostats/507f1f77bcf86cd799439011
         [HttpGet("{id}")]
-        public ActionResult<Thermostat> Get(int id)
+        public ActionResult<Thermostat> Get(string id)
         {
             try
             {

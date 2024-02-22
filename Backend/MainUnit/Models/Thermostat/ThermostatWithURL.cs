@@ -1,4 +1,4 @@
-﻿namespace MainUnit.Models
+﻿namespace MainUnit.Models.Thermostat
 {
     public class ThermostatWithURL : Thermostat
     {
