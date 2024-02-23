@@ -1,0 +1,31 @@
+version: '3.4'
+name: heathub
+
+services:
+
+  mongo:
+    image: mongo
+    restart: unless-stopped
+    container_name: database
+    environment:
+       #No root username and password are set here because the container is running in the docker bridge and is not published
+       MONGO_INITDB_DATABASE: heatHubDb
+
+  mainunit:
+    image: ${DOCKER_REGISTRY-}mainunit
+    build:
+      context: .
+      dockerfile: MainUnit/Dockerfile
+    environment:
+        MongoDbSettings__ConnectionString: mongodb://database:27017
+        MongoDbSettings__DatabaseName: heatHubDb
+        MongoDbSettings__RoomCollectionName: rooms
+        MongoDbSettings__RoomTemperatureCollectionName: roomTemperatures
+        MongoDbSettings__ThermostatCollectionName: thermostats
+
+  thermostat:
+    image: ${DOCKER_REGISTRY-}thermostat
+    build:
+      context: .
+      dockerfile: Thermostat/Dockerfile
+
