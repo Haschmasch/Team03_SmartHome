@@ -22,7 +22,16 @@ namespace MainUnit.Controllers
         // GET: api/Thermostats?skip=0&limit=5
         [HttpGet]
         public ActionResult<List<Thermostat>> Get(int skip, int limit)
-        { 
+        {
+            if (limit <= 0)
+            {
+                return BadRequest("The value of limit cannot be smaller than 1");
+            }
+            else if (skip < 0)
+            {
+                return BadRequest("The value of skip cannot be smaller than 0");
+            }
+
             var thermostats = _thermostatService.GetThermostats(skip, limit);
             if (thermostats.Count == 0)
                 return NotFound($"No Thermostats found for skip: {skip} and limit: {limit}");

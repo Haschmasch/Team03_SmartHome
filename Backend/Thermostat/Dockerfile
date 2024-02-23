@@ -9,17 +9,17 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Team03_SmartHome/Team03_SmartHome.csproj", "Team03_SmartHome/"]
-RUN dotnet restore "./Team03_SmartHome/./Team03_SmartHome.csproj"
+COPY ["Thermostat/Thermostat.csproj", "Thermostat/"]
+RUN dotnet restore "./Thermostat/./Thermostat.csproj"
 COPY . .
-WORKDIR "/src/Team03_SmartHome"
-RUN dotnet build "./Team03_SmartHome.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/Thermostat"
+RUN dotnet build "./Thermostat.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Team03_SmartHome.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Thermostat.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Team03_SmartHome.dll"]
+ENTRYPOINT ["dotnet", "Thermostat.dll"]

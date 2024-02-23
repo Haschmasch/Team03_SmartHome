@@ -60,12 +60,13 @@ namespace MainUnit.Services
 
         public Room UpdateRoom(Room room)
         {
+            CheckRoomExists(room.Id!);
             FilterDefinition<Room> filter = Builders<Room>.Filter.Eq(r => r.Id, room.Id);
             var result = _roomCollection.ReplaceOne(filter, room);
             if (result.IsAcknowledged)
                 return room;
             else
-                throw new RoomNotFoundException($"Room {room.Id} not found.");
+                throw new RoomNotFoundException($"Room with Id:'{room.Id}' not found.");
         }
 
         public void RemoveRoom(string id)
@@ -78,32 +79,43 @@ namespace MainUnit.Services
         public Room AddThermostat(string roomId, string thermostatId)
         {
             var room = CheckRoomExists(roomId);
+            if (room.ThermostatIds.Contains(thermostatId))
+            {
+                throw new ThermostatExistsException($"Thermostat with id:'{thermostatId}' is already added to room.");
+            }
 
-            CheckThermostatExists(thermostatId);
+            var thermostat = CheckThermostatExists(thermostatId);
+            if(thermostat.RoomId != null && thermostat.RoomId != roomId)
+            {
+                throw new RoomExistsException($"Thermostat already assigned to room with Id:'{thermostat.RoomId}'");
+            }
+
+            room.ThermostatIds.Add(thermostatId);
 
             FilterDefinition<Room> filter = Builders<Room>.Filter.Eq(r => r.Id, roomId);
             UpdateDefinition<Room> update = Builders<Room>.Update.AddToSet(r => r.ThermostatIds, thermostatId);
             var updateResult = _roomCollection.UpdateOne(filter, update);
-            room.ThermostatIds.Add(thermostatId);
+      
             if (updateResult.IsAcknowledged)
                 return room;
             else
-                throw new RoomNotFoundException($"Room {room.Id} not found.");
+                throw new RoomNotFoundException($"Room with Id:'{roomId}' not found.");
         }
 
         public void RemoveThermostat(string roomId, string thermostatId)
         {
             var room = CheckRoomExists(roomId);
 
-            CheckThermostatExists(thermostatId);
-
+            var thermostat = CheckThermostatExists(thermostatId);
+            //Remove association from thermostat
+            thermostat.RoomId = null!;
             room.ThermostatIds.Remove(thermostatId);
 
-            FilterDefinition<Room> filter = Builders<Room>.Filter.Eq(r => r.Id, roomId);
-            var result = _roomCollection.FindOneAndReplace(filter, room);
+            FilterDefinition<ThermostatWithURL> thermFilter = Builders<ThermostatWithURL>.Filter.Eq(r => r.Id, thermostatId);
+            _thermostatCollection.FindOneAndReplace(thermFilter, thermostat);
 
-            if (result == null)
-                throw new RoomNotFoundException($"Room {room.Id} not found.");
+            FilterDefinition<Room> roomFilter = Builders<Room>.Filter.Eq(r => r.Id, roomId);
+            _roomCollection.FindOneAndReplace(roomFilter, room);
         }
 
         public Room SetRoomTemperature(string roomId, float temperature)
@@ -114,7 +126,7 @@ namespace MainUnit.Services
             foreach (var id in room.ThermostatIds)
             {
                 var thermostat = _thermostatCollection.Find(t => t.Id == id).FirstOrDefault();
-                ThermostatClient client = null;
+                ThermostatClient client = null!;
                 if (thermostat == null)
                 {
                     //No exception is thrown here, because this is mainly a paranoia check.
@@ -149,26 +161,42 @@ namespace MainUnit.Services
 
         private Room CheckRoomExists(string roomId)
         {
-            var result = _roomCollection.Find(t => t.Id == roomId);
-
-            if (result == null || !result.Any())
+            Room result = null!;
+            try
             {
-                throw new RoomNotFoundException($"Room {roomId} not found.");
+               result = _roomCollection.Find(t => t.Id == roomId).FirstOrDefault();
+            }
+            catch (FormatException ex) 
+            { 
+                throw new InvalidIdException($"No object found for id:'{roomId}'", ex);
             }
 
-            return result.FirstOrDefault();
+            if (result == null)
+            {
+                throw new RoomNotFoundException($"Room with Id:'{roomId}' not found.");
+            }
+
+            return result;
         }
 
-        private Thermostat CheckThermostatExists(string thermostatId)
+        private ThermostatWithURL CheckThermostatExists(string thermostatId)
         {
-            var result = _thermostatCollection.Find(t => t.Id == thermostatId);
-
-            if (result == null || !result.Any())
+            ThermostatWithURL result = null!;
+            try
             {
-                throw new ThermostatNotFoundException($"Room {thermostatId} not found.");
+                result = _thermostatCollection.Find(t => t.Id == thermostatId).FirstOrDefault();
+            }
+            catch (FormatException ex)
+            {
+                throw new InvalidIdException($"No object found for id:'{thermostatId}'", ex);
             }
 
-            return result.FirstOrDefault();
+            if (result == null)
+            {
+                throw new ThermostatNotFoundException($"Thermostat with Id:'{thermostatId}' not found.");
+            }
+
+            return result;
         }
     }
 }
