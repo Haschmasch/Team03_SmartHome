@@ -8,7 +8,8 @@ services:
     restart: unless-stopped
     container_name: database
     environment:
-       #No root username and password are set here because the container is running in the docker bridge and is not published
+       #No root username and password are set here because the container is running in the docker bridge network
+       #If a username of password is set here the connection string for the MainUnit needs to be modified
        MONGO_INITDB_DATABASE: heatHubDb
 
   mainunit:
@@ -17,7 +18,9 @@ services:
       context: .
       dockerfile: MainUnit/Dockerfile
     environment:
+        #27017 is the default mongodb port. Since docker comes with a built in dns, the names of the containers can be used (instead of the ip addresses)
         MongoDbSettings__ConnectionString: mongodb://database:27017
+        #Database and collection names can be freely specified and changed. The API will automatically create the new database/collections
         MongoDbSettings__DatabaseName: heatHubDb
         MongoDbSettings__RoomCollectionName: rooms
         MongoDbSettings__RoomTemperatureCollectionName: roomTemperatures

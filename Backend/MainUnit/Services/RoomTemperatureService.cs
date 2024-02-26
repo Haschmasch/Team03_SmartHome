@@ -32,7 +32,7 @@ namespace MainUnit.Services
         {
             try
             {
-                return _roomTemperatureEntries.Find(t => t.Timestamp >= start && t.Timestamp <= end && t.Metadata.Id == roomId).ToList();
+                return _roomTemperatureEntries.Find(t => t.Timestamp >= start && t.Timestamp <= end && t.Metadata.RoomId == roomId).ToList();
             }
             catch (FormatException ex)
             {

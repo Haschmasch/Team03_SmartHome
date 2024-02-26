@@ -137,10 +137,10 @@ namespace MainUnit.Services
                     //TODO add logging
                     continue;
                 }
-                client = new ThermostatClient(thermostat.URL);
+                //client = new ThermostatClient(thermostat.URL);
                 thermostat.Temperature = temperature;
-                var task = client.UpdateThermostatAsync(thermostat);
-                task.GetAwaiter().GetResult();
+                //var task = client.UpdateThermostatAsync(thermostat);
+                //task.GetAwaiter().GetResult();
             }
 
             //Update and return room
@@ -154,7 +154,7 @@ namespace MainUnit.Services
             {
                 Metadata = new RoomTempMetadataEntry()
                 {
-                    Id = roomId,
+                    RoomId = roomId,
                     ThermostatIds = room.ThermostatIds
                 },
                 Temperature = temperature
