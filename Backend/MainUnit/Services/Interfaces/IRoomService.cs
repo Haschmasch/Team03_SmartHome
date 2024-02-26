@@ -6,7 +6,7 @@ namespace MainUnit.Services.Interfaces
     {
         public Room AddRoom(BaseRoom room);
         public void RemoveRoom(string id);
-        List<Room> GetRooms(int skip, int limit);
+        IList<Room> GetRooms(int skip, int limit);
         public Room UpdateRoom(BaseRoom room);
         public Room GetRoom(string id);
         public Room AddThermostat(string roomId, string thermostatId);

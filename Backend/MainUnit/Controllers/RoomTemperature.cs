@@ -1,6 +1,7 @@
 ﻿using MainUnit.Models.Exceptions;
 using MainUnit.Models.Room;
 using MainUnit.Models.RoomTemperature;
+using MainUnit.Models.Thermostat;
 using MainUnit.Services;
 using MainUnit.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -24,62 +25,57 @@ namespace MainUnit.Controllers
 
         //GET: api/RoomTemperature?start=2012-12-31T22:00:00.000Z&end=2030-12-31T22:00:00.000Z
         [HttpGet]
-        public ActionResult<List<RoomTemperatureEntry>> GetByDate(DateTime start, DateTime end)
+        public ActionResult<IList<RoomTemperatureEntry>> GetByDate(DateTime start, DateTime end)
         {
-            if (ValidateDate(start,end))
-                return BadRequest(dateValidationErrorText);
-
-            try
-            {
-                var products = _roomTemperatureService.GetTemperatureEntries(start, end);
-                return Ok(products);
-            }
-            catch (InvalidIdException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
+            return GetEntries(null!, null!, start, end);
         }
 
         //GET: api/RoomTemperature?roomId=507f1f77bcf86cd799439011&start=2012-12-31T22:00:00.000Z&end=2030-12-31T22:00:00.000Z
         [HttpGet("ByRoom")]
-        public ActionResult<List<RoomTemperatureEntry>> GetByRoomAndDate(string roomId, DateTime start, DateTime end)
+        public ActionResult<IList<RoomTemperatureEntry>> GetByRoomAndDate(string roomId, DateTime start, DateTime end)
         {
-            if (ValidateDate(start, end))
-                return BadRequest(dateValidationErrorText);
-
-            try
-            {
-                var products = _roomTemperatureService.GetTemperatureEntriesByRoom(roomId, start, end);
-                return Ok(products);
-            }
-            catch (InvalidIdException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return GetEntries(roomId, null!, start, end);
         }
 
         //GET: api/RoomTemperature?thermostatId=507f1f77bcf86cd799439011&start=2012-12-31T22:00:00.000Z&end=2030-12-31T22:00:00.000Z
         [HttpGet("ByThermostat")]
-        public ActionResult<List<RoomTemperatureEntry>> GetByThermostatAndDate(string thermostatId, DateTime start, DateTime end)
+        public ActionResult<IList<RoomTemperatureEntry>> GetByThermostatAndDate(string thermostatId, DateTime start, DateTime end)
         {
-            if (ValidateDate(start, end))
+            return GetEntries(null!, thermostatId, start, end);
+        }
+
+        private ActionResult<IList<RoomTemperatureEntry>> GetEntries(string roomId, string thermostatId, DateTime start, DateTime end)
+        {
+
+            if (end < start)
                 return BadRequest(dateValidationErrorText);
 
+            IList<RoomTemperatureEntry> entries;
             try
             {
-                var products = _roomTemperatureService.GetTemperatureEntriesByThermostat(thermostatId, start, end);
-                return Ok(products);
+                if (roomId != null)
+                {
+                    entries = _roomTemperatureService.GetTemperatureEntriesByRoom(roomId, start, end);
+                }
+                else if (thermostatId != null)
+                {
+
+                    entries = _roomTemperatureService.GetTemperatureEntriesByThermostat(thermostatId, start, end);
+                }
+                else
+                {
+                    entries = _roomTemperatureService.GetTemperatureEntries(start, end);
+                }
             }
             catch (InvalidIdException ex)
             {
                 return BadRequest(ex.Message);
             }
-        }
 
-        private bool ValidateDate(DateTime start, DateTime end)
-        {
-            return end < start;
+            if (entries.Count == 0)
+                return NotFound($"No entrys found for query start:'{start}' end:'{end}'.");
+
+            return Ok(entries);
         }
     }
 }

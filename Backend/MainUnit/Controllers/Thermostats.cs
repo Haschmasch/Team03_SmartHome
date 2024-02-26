@@ -21,7 +21,7 @@ namespace MainUnit.Controllers
 
         // GET: api/Thermostats?skip=0&limit=5
         [HttpGet]
-        public ActionResult<List<Thermostat>> Get(int skip, int limit)
+        public ActionResult<IList<Thermostat>> Get(int skip, int limit)
         {
             if (limit <= 0)
             {

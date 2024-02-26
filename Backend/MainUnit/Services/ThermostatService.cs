@@ -31,7 +31,7 @@ namespace MainUnit.Services
             return _thermostatCollection.Find(t => t.Id == thermostat.Id).FirstOrDefault();
         }
 
-        public List<Thermostat> GetThermostats(int skip, int limit)
+        public IList<Thermostat> GetThermostats(int skip, int limit)
         {
             var result = _thermostatCollection.AsQueryable();
             result = result.Skip(skip).Take(limit);

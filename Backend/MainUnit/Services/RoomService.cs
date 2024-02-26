@@ -47,7 +47,7 @@ namespace MainUnit.Services
             return temp;
         }
 
-        public List<Room> GetRooms(int skip, int limit)
+        public IList<Room> GetRooms(int skip, int limit)
         {
             var result = _roomCollection.AsQueryable();
             result = result.Skip(skip).Take(limit);

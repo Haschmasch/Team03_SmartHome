@@ -21,7 +21,7 @@ namespace MainUnit.Controllers
 
         // GET: api/Rooms?skip=0&limit=5
         [HttpGet]
-        public ActionResult<List<Room>> Get(int skip, int limit)
+        public ActionResult<IList<Room>> Get(int skip, int limit)
         {
             if (limit <= 0)
             {
