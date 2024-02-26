@@ -39,10 +39,12 @@ namespace MainUnit.Services
                 settings.Value.RoomTemperatureCollectionName);
         }
 
-        public Room AddRoom(Room room)
+        public Room AddRoom(BaseRoom room)
         {
-            _roomCollection.InsertOne(room);
-            return _roomCollection.Find(r => r.Id == room.Id).FirstOrDefault();
+            Room roomCopy = new Room(room);
+            _roomCollection.InsertOne(roomCopy);
+            var temp = _roomCollection.Find(r => r.Id == roomCopy.Id).FirstOrDefault();
+            return temp;
         }
 
         public List<Room> GetRooms(int skip, int limit)
@@ -58,13 +60,15 @@ namespace MainUnit.Services
             return room;
         }
 
-        public Room UpdateRoom(Room room)
+        public Room UpdateRoom(BaseRoom room)
         {
-            CheckRoomExists(room.Id!);
+            var roomCopy = CheckRoomExists(room.Id!);
+            roomCopy.Name = room.Name;
+            roomCopy.Description = room.Description;
             FilterDefinition<Room> filter = Builders<Room>.Filter.Eq(r => r.Id, room.Id);
-            var result = _roomCollection.ReplaceOne(filter, room);
+            var result = _roomCollection.ReplaceOne(filter, roomCopy);
             if (result.IsAcknowledged)
-                return room;
+                return roomCopy;
             else
                 throw new RoomNotFoundException($"Room with Id:'{room.Id}' not found.");
         }
@@ -168,7 +172,7 @@ namespace MainUnit.Services
             }
             catch (FormatException ex) 
             { 
-                throw new InvalidIdException($"No object found for id:'{roomId}'", ex);
+                throw new InvalidIdException($"No room found for id:'{roomId}'", ex);
             }
 
             if (result == null)
@@ -188,7 +192,7 @@ namespace MainUnit.Services
             }
             catch (FormatException ex)
             {
-                throw new InvalidIdException($"No object found for id:'{thermostatId}'", ex);
+                throw new InvalidIdException($"No thermostat found for id:'{thermostatId}'", ex);
             }
 
             if (result == null)

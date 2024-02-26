@@ -8,7 +8,7 @@ namespace MainUnit.Models.Thermostat
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
-        public float Temperature { get; set; }
-        public string RoomId { get; set; } = null!;
+        public float? Temperature { get; set; }
+        public string? RoomId { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using MainUnit.Models.RoomTemperature;
+﻿using MainUnit.Models.Exceptions;
+using MainUnit.Models.RoomTemperature;
 using MainUnit.Models.Settings;
 using MainUnit.Services.Interfaces;
 using Microsoft.Extensions.Options;
@@ -29,12 +30,26 @@ namespace MainUnit.Services
 
         public List<RoomTemperatureEntry> GetTemperatureEntriesByRoom(string roomId, DateTime start, DateTime end)
         {
-            return _roomTemperatureEntries.Find(t => t.Timestamp >= start && t.Timestamp <= end && t.Metadata.Id == roomId).ToList();
+            try
+            {
+                return _roomTemperatureEntries.Find(t => t.Timestamp >= start && t.Timestamp <= end && t.Metadata.Id == roomId).ToList();
+            }
+            catch (FormatException ex)
+            {
+                throw new InvalidIdException($"No room found for id:'{roomId}'", ex);
+            }
         }
 
         public List<RoomTemperatureEntry> GetTemperatureEntriesByThermostat(string thermostatId, DateTime start, DateTime end)
         {
-            return _roomTemperatureEntries.Find(t => t.Timestamp >= start && t.Timestamp <= end && t.Metadata.ThermostatIds.Contains(thermostatId)).ToList();
+            try
+            {
+                return _roomTemperatureEntries.Find(t => t.Timestamp >= start && t.Timestamp <= end && t.Metadata.ThermostatIds.Contains(thermostatId)).ToList();
+            }
+            catch (FormatException ex)
+            {
+                throw new InvalidIdException($"No thermostat found for id:'{thermostatId}'", ex);
+            }
         }
     }
 }

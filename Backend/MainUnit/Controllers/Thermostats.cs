@@ -60,8 +60,8 @@ namespace MainUnit.Controllers
         {
             try
             {
-                _thermostatService.AddThermostat(thermostatWithURL);
-                return CreatedAtAction(nameof(Get), new { id = thermostatWithURL.Id }, thermostatWithURL);
+                var result = _thermostatService.AddThermostat(thermostatWithURL);
+                return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
             }
             catch (ThermostatNotFoundException ex)
             {

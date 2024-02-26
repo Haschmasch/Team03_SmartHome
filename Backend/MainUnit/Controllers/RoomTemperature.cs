@@ -1,4 +1,7 @@
-﻿using MainUnit.Models.RoomTemperature;
+﻿using MainUnit.Models.Exceptions;
+using MainUnit.Models.Room;
+using MainUnit.Models.RoomTemperature;
+using MainUnit.Services;
 using MainUnit.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,9 +29,16 @@ namespace MainUnit.Controllers
             if (ValidateDate(start,end))
                 return BadRequest(dateValidationErrorText);
 
-            var products = _roomTemperatureService.GetTemperatureEntries(start, end);
+            try
+            {
+                var products = _roomTemperatureService.GetTemperatureEntries(start, end);
+                return Ok(products);
+            }
+            catch (InvalidIdException ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
-            return Ok(products);
         }
 
         //GET: api/RoomTemperature?roomId=507f1f77bcf86cd799439011&start=2012-12-31T22:00:00.000Z&end=2030-12-31T22:00:00.000Z
@@ -38,9 +48,15 @@ namespace MainUnit.Controllers
             if (ValidateDate(start, end))
                 return BadRequest(dateValidationErrorText);
 
-            var products = _roomTemperatureService.GetTemperatureEntriesByRoom(roomId, start, end);
-
-            return Ok(products);
+            try
+            {
+                var products = _roomTemperatureService.GetTemperatureEntriesByRoom(roomId, start, end);
+                return Ok(products);
+            }
+            catch (InvalidIdException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         //GET: api/RoomTemperature?thermostatId=507f1f77bcf86cd799439011&start=2012-12-31T22:00:00.000Z&end=2030-12-31T22:00:00.000Z
@@ -50,9 +66,15 @@ namespace MainUnit.Controllers
             if (ValidateDate(start, end))
                 return BadRequest(dateValidationErrorText);
 
-            var products = _roomTemperatureService.GetTemperatureEntriesByThermostat(thermostatId, start, end);
-
-            return Ok(products);
+            try
+            {
+                var products = _roomTemperatureService.GetTemperatureEntriesByThermostat(thermostatId, start, end);
+                return Ok(products);
+            }
+            catch (InvalidIdException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         private bool ValidateDate(DateTime start, DateTime end)

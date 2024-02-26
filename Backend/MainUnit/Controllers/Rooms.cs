@@ -59,12 +59,12 @@ namespace MainUnit.Controllers
 
         // POST api/Rooms
         [HttpPost]
-        public ActionResult Post([FromBody] Room room)
+        public ActionResult Post([FromBody] BaseRoom room)
         {
             try
             {
                 var result = _roomService.AddRoom(room);
-                return CreatedAtAction(nameof(Get), new { id = room.Id }, room);
+                return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
             }
             catch (Exception ex) when (ex is RoomNotFoundException ||
                 ex is ThermostatNotFoundException ||
@@ -78,7 +78,7 @@ namespace MainUnit.Controllers
 
         // PUT api/Rooms
         [HttpPut]
-        public ActionResult<Room> Put([FromBody] Room room)
+        public ActionResult<Room> Put([FromBody] BaseRoom room)
         {
             try
             {

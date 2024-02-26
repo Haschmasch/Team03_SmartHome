@@ -25,14 +25,10 @@ namespace MainUnit.Services
                 settings.Value.ThermostatCollectionName);
         }
 
-        public void AddThermostat(ThermostatWithURL thermostat)
-        {
-            var result = _thermostatCollection.Find(t => t.Id == thermostat.Id);
-            if(result == null || !result.Any()) 
-            {
-                _thermostatCollection.InsertOne(thermostat);
-            }
-            throw new ThermostatExistsException($"Thermostat with id: {thermostat.Id} already exists");
+        public ThermostatWithURL AddThermostat(ThermostatWithURL thermostat)
+        {         
+            _thermostatCollection.InsertOne(thermostat);
+            return _thermostatCollection.Find(t => t.Id == thermostat.Id).FirstOrDefault();
         }
 
         public List<Thermostat> GetThermostats(int skip, int limit)
