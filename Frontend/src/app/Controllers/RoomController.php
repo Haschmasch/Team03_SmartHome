@@ -5,6 +5,7 @@ namespace App\Controllers;
 
 use App\Entities\Room;
 use App\Models\RoomModel;
+use CodeIgniter\HTTP\RedirectResponse;
 
 class RoomController extends BaseController
 {
@@ -28,47 +29,82 @@ class RoomController extends BaseController
         ]);
     }
 
-    public function edit(string $id)
+    public function edit(string $id): string|RedirectResponse
     {
-        $roomIDs = implode(',', array_map(fn(Room $room) => $room->getID(), $this->roomModel->getRooms()));
         $viewData = [
-            'pageTitle' => 'Thermostat bearbeiten',
-            'thermostat' => $this->thermostatModel->getThermostat($id),
-            'rooms' => $this->roomModel->getRooms(),
+            'pageTitle' => 'Raum bearbeiten',
+            'room' => $this->roomModel->getRoom($id),
         ];
         if (!empty($_POST)) {
             $isValid = $this->validate([
-                'room' => [
-                    'rules' => 'required|in_list[0,' . $roomIDs . ']',
+                'name' => [
+                    'rules' => 'required|min_length[3]',
                     'errors' => [
-                        'required' => 'Bitte gib ein Zimmer an',
-                        'in_list' => 'Bitte gib ein gültiges Zimmer an'
+                        'required' => 'Bitte gib einen Namen für den Raum an',
+                        'min_length' => 'Der Name des Raums muss mindestens 3 Zeichen lang sein'
+                    ]
+                ],
+                'temperature' => [
+                    'rules' => 'required|numeric',
+                    'errors' => [
+                        'required' => 'Bitte gib eine Temperatur für den Raum an',
+                        'numeric' => 'Die Temperatur muss eine Zahl sein'
                     ]
                 ],
             ]);
 
             if (!$isValid) {
                 $viewData['validation'] = $this->validator;
-                return view('pages/thermostat/edit', $viewData);
+                return view('pages/room/edit', $viewData);
             } else {
-                $roomSet = $this->thermostatModel->setRoom($id, (int)$this->request->getPost('room'));
+                $roomSet = $this->roomModel->updateRoom(
+                    $id,
+                    (int)$this->request->getPost('name'),
+                    (float)$this->request->getPost('temperature'));
 
                 if (!$roomSet) {
-                    return redirect()->route('thermostat.edit', [$id])->with('fail', 'Thermostat konnte dem Raum nicht zugewisesen werden')->withInput();
+                    return redirect()->route('room.edit', [$id])->with('fail', 'Raum konnte dem Raum nicht bearbeitet werden')->withInput();
                 } else {
-                    return redirect()->route('thermostats')->with('success', 'Thermostat erfolgreich bearbeitet');
+                    return redirect()->route('home')->with('success', 'Raum erfolgreich bearbeitet');
                 }
             }
 
         }
 
-        return view('pages/thermostat/edit', $viewData);
+        return view('pages/room/edit', $viewData);
     }
 
-    public function create(): string
+    public function create(): string|RedirectResponse
     {
-        $this->roomModel->createRoom('Neuer Raum1');
-        $this->roomModel->getRooms1();
-        return '';
+        $viewData = [
+            'pageTitle' => 'Raum hinzufügen',
+        ];
+        if (!empty($_POST)) {
+            $isValid = $this->validate([
+                'name' => [
+                    'rules' => 'required|min_length[3]',
+                    'errors' => [
+                        'required' => 'Bitte gib einen Namen für den Raum an',
+                        'min_length' => 'Der Name des Raums muss mindestens 3 Zeichen lang sein'
+                    ]
+                ],
+            ]);
+
+            if (!$isValid) {
+                $viewData['validation'] = $this->validator;
+                return view('pages/room/create', $viewData);
+            } else {
+                $roomCreated = $this->roomModel->createRoom($this->request->getPost('name'));
+
+                if (!$roomCreated) {
+                    return redirect()->route('room.create')->with('fail', 'Der Raum könnte nicht hinzugefügt werden')->withInput();
+                } else {
+                    return redirect()->route('home')->with('success', 'Raum erfolgreich erzeugt');
+                }
+            }
+        }
+
+        return view('pages/room/create', $viewData);
+
     }
 }

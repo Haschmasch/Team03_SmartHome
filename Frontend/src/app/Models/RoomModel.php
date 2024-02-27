@@ -10,6 +10,9 @@ class RoomModel
     {
     }
 
+    /**
+     * @return Room[]
+     */
     public function getRooms(): array {
         try {
             $client = \Config\Services::curlrequest();
@@ -18,18 +21,19 @@ class RoomModel
             $rooms = [];
             foreach (json_decode($response->getBody()) as $room) {
                 $rooms[] = new Room(
-                    (int) $room->id,
+                    $room->id,
                     $room->name,
                     (float) $room->temperature,
                     $room->thermostatIds);
             }
             return $rooms;
+
         } catch (\Exception $e) {
             return [];
         }
     }
 
-    public function getRoom(int $id): Room
+    public function getRoom(string $id): Room
     {
         try {
             $client = \Config\Services::curlrequest();
@@ -37,7 +41,7 @@ class RoomModel
             $response = $client->request('GET', 'http://mainunit:8080/api/rooms/' . $id);
             $room_response = json_decode($response->getBody());
             return new Room(
-                (int) $room_response->id,
+                $room_response->id,
                 $room_response->name,
                 (float) $room_response->temperature,
                 $room_response->thermostatIds);
@@ -46,9 +50,9 @@ class RoomModel
         }
     }
 
-    public function setRoomTemperature(int $id, float $temperature): void
+    public function setRoomTemperature(int $id, float $temperature): bool
     {
-
+        return true;
     }
 
     public function createRoom(string $name): bool
@@ -67,4 +71,9 @@ class RoomModel
         }
         return true;
     }
+
+    public function updateRoom(string $id, int $param, float $param1): bool {
+        return true;
+    }
+
 }

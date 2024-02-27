@@ -4,19 +4,19 @@ namespace app\Entities;
 
 
 /**
- * @property int $ID
+ * @property string $ID
  * @property string $name
  * @property float $temperature
  * @property int[] $thermostats
  */
 class Room
 {
-    private int $ID;
+    private string $ID;
     private string $name;
     private float $temperature;
     private array $thermostats;
 
-    public function __construct(int $ID, string $name, float $temperature, array $thermostats)
+    public function __construct(string $ID, string $name, float $temperature, array $thermostats)
     {
         $this->ID = $ID;
         $this->name = $name;
@@ -24,7 +24,7 @@ class Room
         $this->thermostats = $thermostats;
     }
 
-    public function getID(): int
+    public function getID(): string
     {
         return $this->ID;
     }
