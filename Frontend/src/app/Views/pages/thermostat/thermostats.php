@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var \App\Entities\Thermostat[] $thermostats
+ * @var \App\Entities\Room[] $rooms
+ */
+?>
+
 <?= $this->extend('layout/pages-layout') ?>
 <?= $this->section('content') ?>
 

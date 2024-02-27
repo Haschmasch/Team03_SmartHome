@@ -6,6 +6,7 @@ namespace App\Controllers;
 use App\Entities\Room;
 use App\Models\RoomModel;
 use App\Models\ThermostatModel;
+use CodeIgniter\HTTP\RedirectResponse;
 
 class ThermostatController extends BaseController
 {
@@ -31,7 +32,7 @@ class ThermostatController extends BaseController
         ]);
     }
 
-    public function edit(string $id)
+    public function edit(string $id): string|RedirectResponse
     {
         $roomIDs = implode(',', array_map(fn(Room $room) => $room->getID(), $this->roomModel->getRooms()));
         $viewData = [

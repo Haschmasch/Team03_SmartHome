@@ -30,22 +30,25 @@ function selectColor(float $temperature): string
     <h2 class="h3 mb-0">Meine Räume</h2>
 </div>
 <div class="row pb-10">
+
     <?php foreach ($rooms as $room): ?>
         <div class="col-xl-3 col-lg-3 col-md-6 mb-20">
             <div class="card-box height-100-p widget-style3">
-                <div class="d-flex flex-wrap">
-                    <div class="widget-data">
-                        <div class="weight-700 font-24 text-dark"><?= $room->getTemperature() ?> &deg;C</div>
-                        <div class="font-14 text-secondary weight-500">
-                            <?= $room->getName() ?>
+                <a href="<?=base_url(route_to('room.edit', $room->getID()))?>">
+                    <div class="d-flex flex-wrap">
+                        <div class="widget-data">
+                            <div class="weight-700 font-24 text-dark"><?= $room->getTemperature() ?> &deg;C</div>
+                            <div class="font-14 text-secondary weight-500">
+                                <?= $room->getName() ?>
+                            </div>
+                        </div>
+                        <div class="widget-icon">
+                            <div class="icon" data-color="#<?= selectColor($room->getTemperature()) ?>">
+                                <i class="icon-copy dw dw-thermometer"></i>
+                            </div>
                         </div>
                     </div>
-                    <div class="widget-icon">
-                        <div class="icon" data-color="#<?= selectColor($room->getTemperature()) ?>">
-                            <i class="icon-copy dw dw-thermometer"></i>
-                        </div>
-                    </div>
-                </div>
+                </a>
             </div>
         </div>
     <?php endforeach; ?>
