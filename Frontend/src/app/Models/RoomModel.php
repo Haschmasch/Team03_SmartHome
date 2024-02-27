@@ -10,27 +10,39 @@ class RoomModel
     {
     }
 
-    public function getRooms(): array
-    {
-        return [
-            '1' => new Room(1, 'Schlafzimmer', 18, []),
-            '2' => new Room(2, 'Küche', 5, []),
-            '3' => new Room(3, 'Kinderzimmer', 30, []),
-            '4' => new Room(4, 'Wohnzimmer', 25, []),
-        ];
+    public function getRooms(): array {
+        try {
+            $client = \Config\Services::curlrequest();
+
+            $response = $client->request('GET', 'http://mainunit:8080/api/rooms?skip=0&limit=100');
+            $rooms = [];
+            foreach (json_decode($response->getBody()) as $room) {
+                $rooms[] = new Room(
+                    (int) $room->id,
+                    $room->name,
+                    (float) $room->temperature,
+                    $room->thermostatIds);
+            }
+            return $rooms;
+        } catch (\Exception $e) {
+            return [];
+        }
     }
 
     public function getRoom(int $id): Room
     {
-        switch ($id) {
-            case 2:
-                return new Room(2, 'Küche', 5, []);
-            case 3:
-                return new Room(3, 'Kinderzimmer', 30, []);
-            case 4:
-                return new Room(4, 'Wohnzimmer', 25, []);
-            default:
-                return new Room(1, 'Schlafzimmer', 18, []);
+        try {
+            $client = \Config\Services::curlrequest();
+
+            $response = $client->request('GET', 'http://mainunit:8080/api/rooms/' . $id);
+            $room_response = json_decode($response->getBody());
+            return new Room(
+                (int) $room_response->id,
+                $room_response->name,
+                (float) $room_response->temperature,
+                $room_response->thermostatIds);
+        } catch (\Exception $e) {
+            throw new \Exception('Room not found');
         }
     }
 
@@ -39,18 +51,20 @@ class RoomModel
 
     }
 
-    public function createRoom(string $name): void
+    public function createRoom(string $name): bool
     {
-        $client = \Config\Services::curlrequest();
+        try {
+            $client = \Config\Services::curlrequest();
 
-        $response = $client->request('POST', 'http://mainunit:8080/api/rooms', [
-            'json' => [
-                'name' => $name,
-                'description' => ''
-            ]
-        ]);
-        var_dump($response);
-
-        die();
+            $response = $client->request('POST', 'http://mainunit:8080/api/rooms', [
+                'json' => [
+                    'name' => $name,
+                    'description' => ''
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return false;
+        }
+        return true;
     }
 }

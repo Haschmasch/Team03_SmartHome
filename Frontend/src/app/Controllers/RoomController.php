@@ -67,6 +67,8 @@ class RoomController extends BaseController
 
     public function create(): string
     {
-        $this->roomModel->createRoom('Neuer Raum');
+        $this->roomModel->createRoom('Neuer Raum1');
+        $this->roomModel->getRooms1();
+        return '';
     }
 }
