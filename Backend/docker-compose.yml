@@ -13,7 +13,8 @@ services:
        MONGO_INITDB_DATABASE: heatHubDb
 
   mainunit:
-    image: ${DOCKER_REGISTRY-}mainunit
+    #image: ${DOCKER_REGISTRY-}mainunit
+    image: haschmasch/mainunit
     build:
       context: .
       dockerfile: MainUnit/Dockerfile
