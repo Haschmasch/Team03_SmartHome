@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 
 use App\Entities\Room;
+use App\Filters\CIAuth;
 use App\Models\RoomModel;
 use App\Models\ThermostatModel;
 use CodeIgniter\HTTP\RedirectResponse;
@@ -12,9 +13,11 @@ class ThermostatController extends BaseController
 {
     private ThermostatModel $thermostatModel;
     private RoomModel $roomModel;
+    private CIAuth $CIAuth;
 
     public function __construct()
     {
+        $this->CIAuth = new CIAuth();
         $this->thermostatModel = new ThermostatModel();
         $this->roomModel = new RoomModel();
     }
@@ -25,10 +28,7 @@ class ThermostatController extends BaseController
             'pageTitle' => 'Thermostate Übersicht',
             'thermostats' => $this->thermostatModel->getThermostats(),
             'rooms' => $this->roomModel->getRooms(),
-            'user' => [
-                'name' => 'Max Mustermann',
-                'email' => 'max@mustermann.de',
-            ],
+            'user' => $this->CIAuth->user()
         ]);
     }
 

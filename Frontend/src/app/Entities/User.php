@@ -1,10 +1,9 @@
 <?php
 
-namespace app\Entities;
+namespace App\Entities;
 
 
 /**
- * @property int $ID
  * @property string $username
  * @property string $email
  */
@@ -14,9 +13,8 @@ class User
     private string $username;
     private string $email;
 
-    public function __construct(int $id, string $username, string $email)
+    public function __construct(string $username, string $email)
     {
-        $this->id = $id;
         $this->username = $username;
         $this->email = $email;
     }

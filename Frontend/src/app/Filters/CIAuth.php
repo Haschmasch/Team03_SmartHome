@@ -2,6 +2,8 @@
 
 namespace App\Filters;
 
+use App\Entities\User;
+
 class CIAuth
 {
     public static function setCIAuth($result): void
