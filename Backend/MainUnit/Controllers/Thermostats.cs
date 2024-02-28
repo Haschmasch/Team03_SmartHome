@@ -1,6 +1,5 @@
 ﻿using MainUnit.Models.Exceptions;
 using MainUnit.Models.Thermostat;
-using MainUnit.Services;
 using MainUnit.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -81,7 +80,7 @@ namespace MainUnit.Controllers
                 _logger.LogError(ex.Message);
                 return BadRequest(ex.Message);
             }
-            
+
         }
     }
 }

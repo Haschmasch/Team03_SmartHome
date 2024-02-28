@@ -1,8 +1,5 @@
 ﻿using MainUnit.Models.Exceptions;
-using MainUnit.Models.Room;
 using MainUnit.Models.RoomTemperature;
-using MainUnit.Models.Thermostat;
-using MainUnit.Services;
 using MainUnit.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -81,7 +78,7 @@ namespace MainUnit.Controllers
                 _logger.LogError(message);
                 return NotFound(message);
             }
-                
+
             return Ok(entries);
         }
     }

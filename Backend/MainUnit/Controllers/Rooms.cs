@@ -1,6 +1,5 @@
 ﻿using MainUnit.Models.Exceptions;
 using MainUnit.Models.Room;
-using MainUnit.Services;
 using MainUnit.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,11 +27,11 @@ namespace MainUnit.Controllers
             string message;
             if (limit <= 0)
             {
-               message = "The value of limit cannot be smaller than 1";
-               _logger.LogError(message);
-               return BadRequest(message);
+                message = "The value of limit cannot be smaller than 1";
+                _logger.LogError(message);
+                return BadRequest(message);
             }
-            else if(skip < 0)
+            else if (skip < 0)
             {
                 message = "The value of skip cannot be smaller than 0";
                 _logger.LogError(message);
@@ -58,11 +57,8 @@ namespace MainUnit.Controllers
                 var room = _roomService.GetRoom(id);
                 return Ok(room);
             }
-            catch (Exception ex) when (ex is RoomNotFoundException||
-            ex is ThermostatNotFoundException ||
-            ex is InvalidIdException ||
-            ex is ThermostatExistsException ||
-            ex is RoomExistsException) 
+            catch (Exception ex) when (ex is RoomNotFoundException ||
+            ex is InvalidIdException)
             {
                 _logger.LogError(ex.Message);
                 return NotFound(ex.Message);
@@ -73,20 +69,8 @@ namespace MainUnit.Controllers
         [HttpPost]
         public ActionResult Post([FromBody] BaseRoom room)
         {
-            try
-            {
-                var result = _roomService.AddRoom(room);
-                return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
-            }
-            catch (Exception ex) when (ex is RoomNotFoundException ||
-                ex is ThermostatNotFoundException ||
-                ex is InvalidIdException ||
-                ex is ThermostatExistsException ||
-                ex is RoomExistsException)
-            {
-                _logger.LogError(ex.Message);
-                return BadRequest(ex.Message);
-            }
+            var result = _roomService.AddRoom(room);
+            return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
         }
 
         // PUT api/Rooms
@@ -99,10 +83,7 @@ namespace MainUnit.Controllers
                 return Ok(result);
             }
             catch (Exception ex) when (ex is RoomNotFoundException ||
-                ex is ThermostatNotFoundException ||
-                ex is InvalidIdException ||
-                ex is ThermostatExistsException ||
-                ex is RoomExistsException)
+                ex is InvalidIdException)
             {
                 _logger.LogError(ex.Message);
                 return NotFound(ex.Message);
@@ -119,10 +100,7 @@ namespace MainUnit.Controllers
                 return NoContent();
             }
             catch (Exception ex) when (ex is RoomNotFoundException ||
-                ex is ThermostatNotFoundException ||
-                ex is InvalidIdException ||
-                ex is ThermostatExistsException ||
-                ex is RoomExistsException)
+                ex is InvalidIdException)
             {
                 _logger.LogError(ex.Message);
                 return NotFound(ex.Message);
@@ -140,10 +118,9 @@ namespace MainUnit.Controllers
                 return Ok(result);
             }
             catch (Exception ex) when (ex is RoomNotFoundException ||
-                ex is ThermostatNotFoundException ||
-                ex is InvalidIdException ||
                 ex is ThermostatExistsException ||
-                ex is RoomExistsException)
+                ex is RoomExistsException ||
+                ex is InvalidIdException)
             {
                 _logger.LogError(ex.Message);
                 return NotFound(ex.Message);
@@ -161,9 +138,7 @@ namespace MainUnit.Controllers
             }
             catch (Exception ex) when (ex is RoomNotFoundException ||
                 ex is ThermostatNotFoundException ||
-                ex is InvalidIdException ||
-                ex is ThermostatExistsException ||
-                ex is RoomExistsException)
+                ex is InvalidIdException)
             {
                 _logger.LogError(ex.Message);
                 return NotFound(ex.Message);
@@ -180,10 +155,7 @@ namespace MainUnit.Controllers
                 return Ok(result);
             }
             catch (Exception ex) when (ex is RoomNotFoundException ||
-                ex is ThermostatNotFoundException ||
-                ex is InvalidIdException ||
-                ex is ThermostatExistsException ||
-                ex is RoomExistsException)
+                ex is InvalidIdException)
             {
                 _logger.LogError(ex.Message);
                 return NotFound(ex.Message);
