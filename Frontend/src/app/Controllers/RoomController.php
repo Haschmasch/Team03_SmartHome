@@ -4,16 +4,24 @@ namespace App\Controllers;
 
 
 use App\Entities\Room;
+use App\Filters\CIAuth;
 use App\Models\RoomModel;
+use App\Models\ThermostatModel;
 use CodeIgniter\HTTP\RedirectResponse;
 
 class RoomController extends BaseController
 {
     private RoomModel $roomModel;
+    private ThermostatModel $thermostatModel;
+    private CIAuth $CIAuth;
 
-    public function __construct()
+    public function __construct(
+
+    )
     {
         $this->roomModel = new RoomModel();
+        $this->thermostatModel = new ThermostatModel();
+        $this->CIAuth = new CIAuth();
     }
 
     public function index(): string
@@ -22,10 +30,7 @@ class RoomController extends BaseController
             'pageTitle' => 'Thermostate Übersicht',
             'thermostats' => $this->thermostatModel->getThermostats(),
             'rooms' => $this->roomModel->getRooms(),
-            'user' => [
-                'name' => 'Max Mustermann',
-                'email' => 'max@mustermann.de',
-            ],
+            'user' => $this->CIAuth->user()
         ]);
     }
 
@@ -59,7 +64,7 @@ class RoomController extends BaseController
             } else {
                 $roomSet = $this->roomModel->updateRoom(
                     $id,
-                    (int)$this->request->getPost('name'),
+                    $this->request->getPost('name'),
                     (float)$this->request->getPost('temperature'));
 
                 if (!$roomSet) {

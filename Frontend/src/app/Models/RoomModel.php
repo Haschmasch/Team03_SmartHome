@@ -72,7 +72,35 @@ class RoomModel
         return true;
     }
 
-    public function updateRoom(string $id, int $param, float $param1): bool {
+    public function updateRoom(string $id, string $name, float $temperature): bool {
+        try {
+            $client = \Config\Services::curlrequest();
+            $response = $client->request('PUT', 'http://mainunit:8080/api/rooms', [
+                'json' => [
+                    'id' => $id,
+                    'name' => $name,
+                    'description' => '',
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        try {
+            /*
+             * This is a workaround to update the temperature of a room, as the CI4 automatically parses the jason with {} and this throws an error
+             */
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, 'http://mainunit:8080/api/rooms/'. $id . '/temperature');
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($temperature)));
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $temperature);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_exec($ch);
+            curl_close($ch);
+        } catch (\Exception $e) {
+            return false;
+        }
         return true;
     }
 
