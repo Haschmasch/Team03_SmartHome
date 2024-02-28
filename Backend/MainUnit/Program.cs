@@ -1,6 +1,7 @@
 using MainUnit.Models.Settings;
 using MainUnit.Services;
 using MainUnit.Services.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace MainUnit
 {
@@ -9,7 +10,11 @@ namespace MainUnit
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            builder.Services.AddLogging(builder =>
+                builder.AddDebug()
+                    .AddConsole()
+                    .SetMinimumLevel(LogLevel.Information)
+            );
             // Add services to the container.
             //This gets the MongoDbSettings from the environement variables of the docker-compose file
             //unless they are specified in the appsettings.json. The expected syntax in the docker compose:
@@ -35,10 +40,7 @@ namespace MainUnit
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
-
             app.UseAuthorization();
-
 
             app.MapControllers();
 

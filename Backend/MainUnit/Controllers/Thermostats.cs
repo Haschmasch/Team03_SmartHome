@@ -13,28 +13,40 @@ namespace MainUnit.Controllers
     public class Thermostats : ControllerBase
     {
         private readonly IThermostatService _thermostatService;
+        private readonly ILogger _logger;
 
-        public Thermostats(IThermostatService thermostatService)
+
+        public Thermostats(IThermostatService thermostatService, ILogger<Thermostats> logger)
         {
             _thermostatService = thermostatService;
+            this._logger = logger;
         }
 
         // GET: api/Thermostats?skip=0&limit=5
         [HttpGet]
         public ActionResult<IList<Thermostat>> Get(int skip, int limit)
         {
+            string message;
             if (limit <= 0)
             {
-                return BadRequest("The value of limit cannot be smaller than 1");
+                message = "The value of limit cannot be smaller than 1";
+                _logger.LogError(message);
+                return BadRequest(message);
             }
             else if (skip < 0)
             {
-                return BadRequest("The value of skip cannot be smaller than 0");
+                message = "The value of skip cannot be smaller than 0";
+                _logger.LogError(message);
+                return BadRequest(message);
             }
 
             var thermostats = _thermostatService.GetThermostats(skip, limit);
             if (thermostats.Count == 0)
-                return NotFound($"No Thermostats found for skip: {skip} and limit: {limit}");
+            {
+                message = $"No Thermostats found for skip: {skip} and limit: {limit}";
+                _logger.LogError(message);
+                return NotFound(message);
+            }
 
             return Ok(thermostats);
         }
@@ -50,6 +62,7 @@ namespace MainUnit.Controllers
             }
             catch (ThermostatNotFoundException ex)
             {
+                _logger.LogError(ex.Message);
                 return NotFound(ex.Message);
             }
         }
@@ -63,8 +76,9 @@ namespace MainUnit.Controllers
                 var result = _thermostatService.AddThermostat(thermostatWithURL);
                 return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
             }
-            catch (ThermostatNotFoundException ex)
+            catch (Exception ex) when (ex is ThermostatExistsException || ex is UriFormatException)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(ex.Message);
             }
             

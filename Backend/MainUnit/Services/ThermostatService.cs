@@ -26,9 +26,16 @@ namespace MainUnit.Services
         }
 
         public ThermostatWithURL AddThermostat(ThermostatWithURL thermostat)
-        {         
+        {
+            if (!ValidateUrl(thermostat.URL))
+                throw new UriFormatException($"A invalid URL was provided. URL:'{thermostat.URL}'.");
+
+            var existingThermostat = _thermostatCollection.Find(t => t.URL == thermostat.URL).FirstOrDefault();
+            if (existingThermostat != null)
+                throw new ThermostatExistsException($"The thermostat with the URL:'{thermostat.URL}' already exists.");
+
             _thermostatCollection.InsertOne(thermostat);
-            return _thermostatCollection.Find(t => t.Id == thermostat.Id).FirstOrDefault();
+            return thermostat;
         }
 
         public IList<Thermostat> GetThermostats(int skip, int limit)
@@ -43,11 +50,20 @@ namespace MainUnit.Services
         {
             var result = _thermostatCollection.Find(t => t.Id == id);
 
-            if(result != null && result.Any())
+            if (result != null && result.Any())
             {
                 return result.FirstOrDefault();
             }
             throw new ThermostatNotFoundException($"Thermostat with id: {id} not found");
+        }
+
+        private bool ValidateUrl(string url)
+        {
+            if (Uri.TryCreate(url, UriKind.Absolute, out Uri validatedUri))
+            {
+                return (validatedUri.Scheme == Uri.UriSchemeHttp || validatedUri.Scheme == Uri.UriSchemeHttps);
+            }
+            return false;
         }
     }
 }
