@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Entities\Room;
+use DateTime;
 
 class RoomModel
 {
@@ -13,7 +14,8 @@ class RoomModel
     /**
      * @return Room[]
      */
-    public function getRooms(): array {
+    public function getRooms(): array
+    {
         try {
             $client = \Config\Services::curlrequest();
 
@@ -23,7 +25,7 @@ class RoomModel
                 $rooms[] = new Room(
                     $room->id,
                     $room->name,
-                    (float) $room->temperature,
+                    (float)$room->temperature,
                     $room->thermostatIds);
             }
             return $rooms;
@@ -43,7 +45,7 @@ class RoomModel
             return new Room(
                 $room_response->id,
                 $room_response->name,
-                (float) $room_response->temperature,
+                (float)$room_response->temperature,
                 $room_response->thermostatIds);
         } catch (\Exception $e) {
             throw new \Exception('Room not found');
@@ -52,6 +54,21 @@ class RoomModel
 
     public function setRoomTemperature(int $id, float $temperature): bool
     {
+        /*
+            * This is a workaround to update the temperature of a room, as the CI4 automatically parses the jason with {} and this throws an error
+            */
+        try {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, 'http://mainunit:8080/api/rooms/' . $id . '/temperature');
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Content-Length: ' . strlen($temperature)));
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $temperature);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_exec($ch);
+            curl_close($ch);
+        } catch (\Exception $e) {
+            return false;
+        }
         return true;
     }
 
@@ -72,7 +89,8 @@ class RoomModel
         return true;
     }
 
-    public function updateRoom(string $id, string $name, float $temperature): bool {
+    public function updateRoom(string $id, string $name, float $temperature): bool
+    {
         try {
             $client = \Config\Services::curlrequest();
             $response = $client->request('PUT', 'http://mainunit:8080/api/rooms', [
@@ -87,21 +105,24 @@ class RoomModel
         }
 
         try {
-            /*
-             * This is a workaround to update the temperature of a room, as the CI4 automatically parses the jason with {} and this throws an error
-             */
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, 'http://mainunit:8080/api/rooms/'. $id . '/temperature');
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($temperature)));
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $temperature);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_exec($ch);
-            curl_close($ch);
+            $this->setRoomTemperature($id, $temperature);
         } catch (\Exception $e) {
             return false;
         }
         return true;
     }
 
+    public function getTemperatureData()
+    {
+        $currentDateTime = new DateTime('tomorrow');
+        $currentDate = $currentDateTime->format('Y-m-d');
+        try {
+            $client = \Config\Services::curlrequest();
+            $response = $client->request('GET', 'http://mainunit:8080/api/RoomTemperature?start=2022-01-01&end=' . $currentDate);
+            var_dump($response->getBody());
+            die();
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
 }

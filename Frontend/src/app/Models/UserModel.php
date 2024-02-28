@@ -12,7 +12,7 @@ class UserModel
     public function getUser(string $username): User
     {
         #todo: implement query to get user
-        return new User(1, 'Max Mustermann', 'max@mustermann.de');
+        return new User("Testnutzer", 'Philipp@ehinger.de', 'max@mustermann.de');
     }
 
     public function checkCredentials(string $username, string $password): bool

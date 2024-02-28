@@ -8,12 +8,17 @@ use App\Models\RoomModel;
 
 class Home extends BaseController
 {
+    private RoomModel $roomModell;
+
     public function __construct()
     {
         $this->CIAuth = new CIAuth();
+        $this->roomModell = new RoomModel();
     }
     public function index(): string
     {
+        $foo = $this->roomModell->getTemperatureData();
+
         return view('pages/home', [
             'pageTitle' => 'Dashboard',
             'rooms' => (new RoomModel())->getRooms(),
