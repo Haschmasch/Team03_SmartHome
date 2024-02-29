@@ -5,7 +5,8 @@
       "commandVersion": "1.0",
       "serviceActions": {
         "mainunit": "StartDebugging",
-        "thermostat": "StartDebugging"
+        "thermostat": "StartDebugging",
+        "mongo": "StartWithoutDebugging"
       }
     }
   }

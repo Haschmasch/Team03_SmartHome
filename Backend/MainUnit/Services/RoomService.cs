@@ -1,5 +1,4 @@
-﻿using MainUnit.Controllers;
-using MainUnit.HttpClients;
+﻿using MainUnit.HttpClients;
 using MainUnit.Models.Exceptions;
 using MainUnit.Models.Room;
 using MainUnit.Models.RoomTemperature;
@@ -7,11 +6,8 @@ using MainUnit.Models.Settings;
 using MainUnit.Models.Thermostat;
 using MainUnit.Services.Interfaces;
 using Microsoft.Extensions.Options;
-using MongoDB.Bson;
-using MongoDB.Bson.IO;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using System.Runtime.InteropServices;
 
 namespace MainUnit.Services
 {
@@ -20,8 +16,9 @@ namespace MainUnit.Services
         private readonly IMongoCollection<Room> _roomCollection;
         private readonly IMongoCollection<ThermostatWithURL> _thermostatCollection;
         private readonly IMongoCollection<RoomTemperatureEntry> _roomTemperatureEntries;
+        private readonly ILogger<RoomService> _logger;
 
-        public RoomService(IOptions<MongoDbSettings> settings)
+        public RoomService(IOptions<MongoDbSettings> settings, ILogger<RoomService> logger)
         {
             var mongoClient = new MongoClient(
                 settings.Value.ConnectionString);
@@ -37,6 +34,7 @@ namespace MainUnit.Services
 
             _roomTemperatureEntries = mongoDatabase.GetCollection<RoomTemperatureEntry>(
                 settings.Value.RoomTemperatureCollectionName);
+            this._logger = logger;
         }
 
         public Room AddRoom(BaseRoom room)
@@ -89,7 +87,7 @@ namespace MainUnit.Services
             }
 
             var thermostat = CheckThermostatExists(thermostatId);
-            if(thermostat.RoomId != null && thermostat.RoomId != roomId)
+            if (thermostat.RoomId != null && thermostat.RoomId != roomId)
             {
                 throw new RoomExistsException($"Thermostat already assigned to room with Id:'{thermostat.RoomId}'");
             }
@@ -99,7 +97,7 @@ namespace MainUnit.Services
             FilterDefinition<Room> filter = Builders<Room>.Filter.Eq(r => r.Id, roomId);
             UpdateDefinition<Room> update = Builders<Room>.Update.AddToSet(r => r.ThermostatIds, thermostatId);
             var updateResult = _roomCollection.UpdateOne(filter, update);
-      
+
             if (updateResult.IsAcknowledged)
                 return room;
             else
@@ -134,13 +132,13 @@ namespace MainUnit.Services
                 if (thermostat == null)
                 {
                     //No exception is thrown here, because this is mainly a paranoia check.
-                    //TODO add logging
+                    _logger.LogWarning($"Room:'{room.Id}' has a Thermostat assigned, which does not exist in {nameof(_thermostatCollection)}. ThermostatId:'{id}'");
                     continue;
                 }
-                //client = new ThermostatClient(thermostat.URL);
+                client = new ThermostatClient(thermostat.URL);
                 thermostat.Temperature = temperature;
-                //var task = client.UpdateThermostatAsync(thermostat);
-                //task.GetAwaiter().GetResult();
+                var task = client.UpdateThermostatAsync(thermostat);
+                task.GetAwaiter().GetResult();
             }
 
             //Update and return room
@@ -168,10 +166,10 @@ namespace MainUnit.Services
             Room result = null!;
             try
             {
-               result = _roomCollection.Find(t => t.Id == roomId).FirstOrDefault();
+                result = _roomCollection.Find(t => t.Id == roomId).FirstOrDefault();
             }
-            catch (FormatException ex) 
-            { 
+            catch (FormatException ex)
+            {
                 throw new InvalidIdException($"No room found for id:'{roomId}'", ex);
             }
 

@@ -1,4 +1,4 @@
-﻿using MainUnit.Models.Exceptions;
+using MainUnit.Models.Exceptions;
 using MainUnit.Models.Settings;
 using MainUnit.Models.Thermostat;
 using MainUnit.Services.Interfaces;
@@ -26,12 +26,19 @@ namespace MainUnit.Services
                 settings.Value.ThermostatCollectionName);
         }
 
-        public Thermostat AddThermostat(Thermostat thermostat)
+        public ThermostatWithURL AddThermostat(ThermostatWithURL thermostat)
         {
             thermostat.Id = ObjectId.GenerateNewId(Convert.ToInt32(thermostat.Id)).ToString();
+            
+            if (!ValidateUrl(thermostat.URL))
+                throw new UriFormatException($"A invalid URL was provided. URL:'{thermostat.URL}'.");
+
+            var existingThermostat = _thermostatCollection.Find(t => t.URL == thermostat.URL).FirstOrDefault();
+            if (existingThermostat != null)
+                throw new ThermostatExistsException($"The thermostat with the URL:'{thermostat.URL}' already exists.");
 
             _thermostatCollection.InsertOne(thermostat);
-            return _thermostatCollection.Find(t => t.Id == thermostat.Id).FirstOrDefault();
+            return thermostat;
         }
 
         public IList<Thermostat> GetThermostats(int skip, int limit)
@@ -46,7 +53,7 @@ namespace MainUnit.Services
         {
             var result = _thermostatCollection.Find(t => t.Id == id);
 
-            if(result != null && result.Any())
+            if (result != null && result.Any())
             {
                 return result.FirstOrDefault();
             }
@@ -62,6 +69,15 @@ namespace MainUnit.Services
                 return result.FirstOrDefault();
             }
             throw new ThermostatNotFoundException($"Thermostat with id: {name} not found");
+        }
+
+        private bool ValidateUrl(string url)
+        {
+            if (Uri.TryCreate(url, UriKind.Absolute, out Uri validatedUri))
+            {
+                return (validatedUri.Scheme == Uri.UriSchemeHttp || validatedUri.Scheme == Uri.UriSchemeHttps);
+            }
+            return false;
         }
     }
 }

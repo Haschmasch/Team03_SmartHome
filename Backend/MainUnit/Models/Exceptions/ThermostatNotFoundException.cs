@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace MainUnit.Models.Exceptions
+﻿namespace MainUnit.Models.Exceptions
 {
     public class ThermostatNotFoundException : Exception
     {

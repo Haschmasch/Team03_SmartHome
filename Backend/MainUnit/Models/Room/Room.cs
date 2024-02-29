@@ -1,6 +1,4 @@
-﻿using MongoDB.Bson;
-
-namespace MainUnit.Models.Room
+﻿namespace MainUnit.Models.Room
 {
     public class Room : BaseRoom
     {

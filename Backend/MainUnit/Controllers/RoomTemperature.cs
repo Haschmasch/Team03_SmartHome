@@ -1,8 +1,5 @@
 ﻿using MainUnit.Models.Exceptions;
-using MainUnit.Models.Room;
 using MainUnit.Models.RoomTemperature;
-using MainUnit.Models.Thermostat;
-using MainUnit.Services;
 using MainUnit.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,10 +14,12 @@ namespace MainUnit.Controllers
         private const string dateValidationErrorText = "The start date must smaller or equal the end date";
 
         private readonly IRoomTemperatureService _roomTemperatureService;
+        private readonly ILogger _logger;
 
-        public RoomTemperature(IRoomTemperatureService roomTemperatureService)
+        public RoomTemperature(IRoomTemperatureService roomTemperatureService, ILogger<RoomTemperature> logger)
         {
             _roomTemperatureService = roomTemperatureService;
+            this._logger = logger;
         }
 
         //GET: api/RoomTemperature?start=2012-12-31T22:00:00.000Z&end=2030-12-31T22:00:00.000Z
@@ -69,11 +68,16 @@ namespace MainUnit.Controllers
             }
             catch (InvalidIdException ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(ex.Message);
             }
 
             if (entries.Count == 0)
-                return NotFound($"No entrys found for query start:'{start}' end:'{end}'.");
+            {
+                string message = $"No entrys found for query start:'{start}' end:'{end}'.";
+                _logger.LogError(message);
+                return NotFound(message);
+            }
 
             return Ok(entries);
         }
