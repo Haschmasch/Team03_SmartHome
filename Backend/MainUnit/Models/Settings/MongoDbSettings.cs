@@ -8,5 +8,6 @@
         //This should be a timeseries
         public string RoomTemperatureCollectionName { get; set; } = null!;
         public string ThermostatCollectionName { get; set; } = null!;
+        public string AuthCollectionName { get; set; } = null!;
     }
 }

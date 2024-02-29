@@ -1,4 +1,12 @@
 
+using System.Net.Http.Headers;
+using System.Net.Http;
+using Thermostat;
+using Thermostat.Data;
+using Thermostat.Models;
+using Thermostat.Services;
+using Thermostat.Services.Interfaces;
+
 namespace Team03_SmartHome
 {
     public class Program
@@ -7,26 +15,29 @@ namespace Team03_SmartHome
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+
+            builder.Services.AddSingleton<IThermostatService, ThermostatService>();
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddSingleton<Startup>();
+
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            Startup startupService = app.Services.GetRequiredService<Startup>();
+
+            //Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

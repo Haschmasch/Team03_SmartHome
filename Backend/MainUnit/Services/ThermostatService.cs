@@ -3,6 +3,7 @@ using MainUnit.Models.Settings;
 using MainUnit.Models.Thermostat;
 using MainUnit.Services.Interfaces;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
@@ -10,7 +11,7 @@ namespace MainUnit.Services
 {
     public class ThermostatService : IThermostatService
     {
-        private readonly IMongoCollection<ThermostatWithURL> _thermostatCollection;
+        private readonly IMongoCollection<Thermostat> _thermostatCollection;
 
 
         public ThermostatService(IOptions<MongoDbSettings> settings)
@@ -21,12 +22,14 @@ namespace MainUnit.Services
             var mongoDatabase = mongoClient.GetDatabase(
                 settings.Value.DatabaseName);
 
-            _thermostatCollection = mongoDatabase.GetCollection<ThermostatWithURL>(
+            _thermostatCollection = mongoDatabase.GetCollection<Thermostat>(
                 settings.Value.ThermostatCollectionName);
         }
 
-        public ThermostatWithURL AddThermostat(ThermostatWithURL thermostat)
-        {         
+        public Thermostat AddThermostat(Thermostat thermostat)
+        {
+            thermostat.Id = ObjectId.GenerateNewId(Convert.ToInt32(thermostat.Id)).ToString();
+
             _thermostatCollection.InsertOne(thermostat);
             return _thermostatCollection.Find(t => t.Id == thermostat.Id).FirstOrDefault();
         }
@@ -48,6 +51,17 @@ namespace MainUnit.Services
                 return result.FirstOrDefault();
             }
             throw new ThermostatNotFoundException($"Thermostat with id: {id} not found");
+        }
+
+        public Thermostat GetThermostatByName(string name)
+        {
+            var result = _thermostatCollection.Find(t => t.Name == name);
+
+            if(result != null && result.Any())
+            {
+                return result.FirstOrDefault();
+            }
+            throw new ThermostatNotFoundException($"Thermostat with id: {name} not found");
         }
     }
 }

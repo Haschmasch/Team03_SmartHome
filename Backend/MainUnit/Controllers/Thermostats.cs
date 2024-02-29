@@ -3,6 +3,8 @@ using MainUnit.Models.Thermostat;
 using MainUnit.Services;
 using MainUnit.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
+using System.Net.Http;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -56,18 +58,31 @@ namespace MainUnit.Controllers
 
         // POST: api/Thermostats
         [HttpPost]
-        public ActionResult<Thermostat> Post([FromBody] ThermostatWithURL thermostatWithURL)
+        public ActionResult<Thermostat> Register(string name)
         {
             try
             {
-                var result = _thermostatService.AddThermostat(thermostatWithURL);
-                return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
+                var thermostat = _thermostatService.GetThermostatByName(name);
+
+                return new ActionResult<Thermostat>(thermostat);
             }
             catch (ThermostatNotFoundException ex)
             {
+                var thermostat = new Thermostat();
+
+                thermostat.Id = name;
+                thermostat.Name = name;
+                thermostat.Temperature = 21;
+                thermostat.RoomId = "";
+
+                var result = _thermostatService.AddThermostat(thermostat);
+
+                return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
+            }
+            catch (Exception ex)
+            {
                 return BadRequest(ex.Message);
             }
-            
         }
     }
 }

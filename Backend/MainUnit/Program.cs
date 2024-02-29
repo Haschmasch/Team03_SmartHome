@@ -1,6 +1,9 @@
+using System.Text;
 using MainUnit.Models.Settings;
 using MainUnit.Services;
 using MainUnit.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace MainUnit
 {
@@ -20,11 +23,34 @@ namespace MainUnit
             builder.Services.AddScoped<IRoomService, RoomService>();
             builder.Services.AddScoped<IThermostatService, ThermostatService>();
             builder.Services.AddScoped<IRoomTemperatureService, RoomTemperatureService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
             
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            var key = Encoding.ASCII.GetBytes("LQKeZVE_x+-v{4zsnrPMwt76AJ#3,=R'<\"%W5h;g?yYF>!}@)c");
+
+            builder.Services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
+
+            builder.Services.AddAuthorization();
+            
 
             var app = builder.Build();
 
@@ -35,12 +61,13 @@ namespace MainUnit
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
-
-            app.MapControllers();
+            app.MapControllers().RequireAuthorization();
 
             app.Run();
         }

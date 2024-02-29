@@ -13,11 +13,16 @@ services:
        MONGO_INITDB_DATABASE: heatHubDb
 
   mainunit:
-    #image: ${DOCKER_REGISTRY-}mainunit
-    image: haschmasch/mainunit
+    image: ${DOCKER_REGISTRY-}mainunit
+    #image: haschmasch/mainunit
+    container_name: mainunit
+    depends_on:
+        - mongo
     build:
       context: .
       dockerfile: MainUnit/Dockerfile
+    ports:
+      - "8085:8080"
     environment:
         #27017 is the default mongodb port. Since docker comes with a built in dns, the names of the containers can be used (instead of the ip addresses)
         MongoDbSettings__ConnectionString: mongodb://database:27017
@@ -26,10 +31,68 @@ services:
         MongoDbSettings__RoomCollectionName: rooms
         MongoDbSettings__RoomTemperatureCollectionName: roomTemperatures
         MongoDbSettings__ThermostatCollectionName: thermostats
+        MongoDbSettings__AuthCollectionName: userLogins
 
   thermostat:
     image: ${DOCKER_REGISTRY-}thermostat
+    depends_on:
+        - mainunit
     build:
       context: .
       dockerfile: Thermostat/Dockerfile
+    ports:
+      - "8086:8080"
+    environment:
+        ThermostatID: 1
+  
+  # thermostat2:
+  #   image: ${DOCKER_REGISTRY-}thermostat
+  #   depends_on:
+  #       - mainunit
+  #   build:
+  #     context: .
+  #     dockerfile: Thermostat/Dockerfile
+  #   ports:
+  #     - "8087:8080"
+  #   environment:
+  #       ThermostatID: 2
+  
+  # thermostat3:
+  #   image: ${DOCKER_REGISTRY-}thermostat
+  #   depends_on:
+  #       - mainunit
+  #   build:
+  #     context: .
+  #     dockerfile: Thermostat/Dockerfile
+  #   ports:
+  #     - "8088:8080"
+  #   environment:
+  #       ThermostatID: 3
 
+  # thermostat4:
+  #   image: ${DOCKER_REGISTRY-}thermostat
+  #   depends_on:
+  #       - mainunit
+  #   build:
+  #     context: .
+  #     dockerfile: Thermostat/Dockerfile
+  #   ports:
+  #     - "8089:8080"
+  #   environment:
+  #       ThermostatID: 4
+
+  # thermostat5:
+  #   image: ${DOCKER_REGISTRY-}thermostat
+  #   depends_on:
+  #       - mainunit
+  #   build:
+  #     context: .
+  #     dockerfile: Thermostat/Dockerfile
+  #   ports:
+  #     - "8090:8080"
+  #   environment:
+  #       ThermostatID: 5
+
+networks:
+  default:
+    driver: bridge
