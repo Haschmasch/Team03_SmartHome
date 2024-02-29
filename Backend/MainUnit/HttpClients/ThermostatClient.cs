@@ -1,4 +1,4 @@
-﻿using MainUnit.Models.Thermostat;
+using MainUnit.Models.Thermostat;
 using System.Net.Http.Headers;
 
 namespace MainUnit.HttpClients
@@ -10,22 +10,20 @@ namespace MainUnit.HttpClients
         public ThermostatClient(string uri)
         {
             _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri(uri);
+            _httpClient.BaseAddress = new Uri($"http://{name}:8080");
             _httpClient.DefaultRequestHeaders.Clear();
             _httpClient.DefaultRequestHeaders.Accept
                 .Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public async Task<ThermostatWithURL> UpdateThermostatAsync(ThermostatWithURL thermostatWithURL)
+        public async Task<bool> UpdateThermostatAsync(Thermostat thermostat)
         {
             //TODO Change API Route to route of thermostat
             HttpResponseMessage response = await _httpClient.PutAsJsonAsync(
             $"api/thermostat/{thermostatWithURL.Id}", thermostatWithURL);
             response.EnsureSuccessStatusCode();
-
-            // Deserialize the updated Thermostat from the response body.
-            thermostatWithURL = await response.Content.ReadAsAsync<ThermostatWithURL>();
-            return thermostatWithURL;
+            
+            return await response.Content.ReadAsAsync<bool>();
         }
     }
 }

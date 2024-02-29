@@ -74,7 +74,7 @@ namespace MainUnit.Controllers
         {
             try
             {
-                var thermostat = _thermostatService.GetThermostatByName(name);
+                var thermostat = new Thermostat() { Name = name };
 
                 return new ActionResult<Thermostat>(thermostat);
             }

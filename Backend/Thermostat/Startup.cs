@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Thermostat.Data;
@@ -42,9 +42,7 @@ namespace Thermostat
         private async void RegisterAtMainUnit()
         {
             Console.WriteLine("Registering at main unit...");
-            
-            HttpResponseMessage response = await _httpClient.PostAsync("api/Thermostats?name=" + Environment.GetEnvironmentVariable("ThermostatID"), null);
-            response.EnsureSuccessStatusCode();
+            HttpResponseMessage response = await _httpClient.PostAsync("api/Thermostats?name=" + Environment.GetEnvironmentVariable("ThermostatName"), null);
 
             var thermostatResponse = await response.Content.ReadAsAsync<ThermostatObject>();
 
