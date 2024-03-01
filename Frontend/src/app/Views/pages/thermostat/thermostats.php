@@ -29,14 +29,17 @@
 </div>
 <div class="row pb-10">
 
-    <?php foreach ($thermostats as $thermostat): ?>
+    <?php
+    $counter = 0;
+    foreach ($thermostats as $thermostat): ?>
         <div class="col-sm-12 col-md-4 mb-30">
             <div class="card card-box">
-                <div class="card-header"><?= !is_null($thermostat->getRoomID()) ? $rooms[$thermostat->getRoomID()]->getName() : "Nicht zugewisen"?></div>
+                <div class="card-header"><?= !is_null($thermostat->getRoomID()) ? $rooms[$thermostat->getRoomID()]->getName() : "Nicht zugewisen" ?></div>
                 <div class="card-body">
-                    <h5 class="card-title">Thermostat - <?=$thermostat->getID()?></h5>
-                    <p class="card-text"><?=$thermostat->getTemperature()?> &deg;C</p>
-                    <a href="<?=base_url(route_to('thermostat.edit', $thermostat->getID()))?>" class="btn btn-primary">Bearbeiten</a>
+                    <h5 class="card-title">Thermostat - <?= $counter?></h5>
+                    <p class="card-text"><?= $thermostat->getTemperature() ?> &deg;C</p>
+                    <a href="<?= base_url(route_to('thermostat.edit', $thermostat->getID())) ?>"
+                       class="btn btn-primary">Bearbeiten</a>
                 </div>
             </div>
         </div>

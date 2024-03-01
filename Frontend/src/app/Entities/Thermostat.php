@@ -10,23 +10,23 @@ namespace app\Entities;
  */
 class Thermostat
 {
-    private int $ID;
+    private string $ID;
     private float $temperature;
-    private ?int $roomID;
+    private ?string $roomID;
 
     /**
-     * @param int $ID
+     * @param string $ID
      * @param float $temperature
-     * @param ?int $roomID
+     * @param ?string $roomID
      */
-    public function __construct(int $ID, float $temperature, ?int $roomID)
+    public function __construct(string $ID, float $temperature, ?string $roomID)
     {
         $this->ID = $ID;
         $this->temperature = $temperature;
         $this->roomID = $roomID;
     }
 
-    public function getID(): int
+    public function getID(): string
     {
         return $this->ID;
     }
@@ -36,7 +36,7 @@ class Thermostat
         return $this->temperature;
     }
 
-    public function getRoomID(): ?int
+    public function getRoomID(): ?string
     {
         return $this->roomID;
     }

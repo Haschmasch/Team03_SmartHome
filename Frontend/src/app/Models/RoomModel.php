@@ -3,12 +3,17 @@
 namespace App\Models;
 
 use App\Entities\Room;
+use App\Filters\CIAuth;
 use DateTime;
 
 class RoomModel
 {
+    private CIAuth $CIAuth;
+
     public function __construct()
+
     {
+        $this->CIAuth = new CIAuth();
     }
 
     /**
@@ -19,10 +24,14 @@ class RoomModel
         try {
             $client = \Config\Services::curlrequest();
 
-            $response = $client->request('GET', 'http://mainunit:8080/api/rooms?skip=0&limit=100');
+            $response = $client->request('GET', 'http://mainunit:8080/api/rooms?skip=0&limit=100', [
+                'headers' => [
+                    'authorization' => 'Bearer ' . $this->CIAuth->user()->getToken(),
+                ],
+            ]);
             $rooms = [];
             foreach (json_decode($response->getBody()) as $room) {
-                $rooms[] = new Room(
+                $rooms[$room->id] = new Room(
                     $room->id,
                     $room->name,
                     (float)$room->temperature,
@@ -40,13 +49,17 @@ class RoomModel
         try {
             $client = \Config\Services::curlrequest();
 
-            $response = $client->request('GET', 'http://mainunit:8080/api/rooms/' . $id);
-            $room_response = json_decode($response->getBody());
+            $response = $client->request('GET', 'http://mainunit:8080/api/rooms/' . $id, [
+                'headers' => [
+                    'authorization' => 'Bearer ' . $this->CIAuth->user()->getToken(),
+                ],
+            ]);
+            $roomResponse = json_decode($response->getBody());
             return new Room(
-                $room_response->id,
-                $room_response->name,
-                (float)$room_response->temperature,
-                $room_response->thermostatIds);
+                $roomResponse->id,
+                $roomResponse->name,
+                (float)$roomResponse->temperature,
+                $roomResponse->thermostatIds);
         } catch (\Exception $e) {
             throw new \Exception('Room not found');
         }
@@ -58,9 +71,10 @@ class RoomModel
             * This is a workaround to update the temperature of a room, as the CI4 automatically parses the jason with {} and this throws an error
             */
         try {
+            $authorization = 'Authorization: Bearer ' . $this->CIAuth->user()->getToken();
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, 'http://mainunit:8080/api/rooms/' . $id . '/temperature');
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Content-Length: ' . strlen($temperature)));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $authorization, 'Content-Length: ' . strlen($temperature)));
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
             curl_setopt($ch, CURLOPT_POSTFIELDS, $temperature);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -78,6 +92,9 @@ class RoomModel
             $client = \Config\Services::curlrequest();
 
             $response = $client->request('POST', 'http://mainunit:8080/api/rooms', [
+                'headers' => [
+                    'authorization' => 'Bearer ' . $this->CIAuth->user()->getToken(),
+                ],
                 'json' => [
                     'name' => $name,
                     'description' => ''
@@ -94,6 +111,9 @@ class RoomModel
         try {
             $client = \Config\Services::curlrequest();
             $response = $client->request('PUT', 'http://mainunit:8080/api/rooms', [
+                'headers' => [
+                    'authorization' => 'Bearer ' . $this->CIAuth->user()->getToken(),
+                ],
                 'json' => [
                     'id' => $id,
                     'name' => $name,
@@ -118,7 +138,11 @@ class RoomModel
         $currentDate = $currentDateTime->format('Y-m-d');
         try {
             $client = \Config\Services::curlrequest();
-            $response = $client->request('GET', 'http://mainunit:8080/api/RoomTemperature?start=2022-01-01&end=' . $currentDate);
+            $response = $client->request('GET', 'http://mainunit:8080/api/RoomTemperature?start=2022-01-01&end=' . $currentDate, [
+                'headers' => [
+                    'authorization' => 'Bearer ' . $this->CIAuth->user()->getToken(),
+                ],
+            ]);
         } catch (\Exception $e) {
             return [];
         }

@@ -9,6 +9,7 @@ use App\Models\RoomModel;
 class Home extends BaseController
 {
     private RoomModel $roomModell;
+    private CIAuth $CIAuth;
 
     public function __construct()
     {
