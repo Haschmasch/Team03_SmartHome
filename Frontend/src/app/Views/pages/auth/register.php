@@ -25,23 +25,6 @@
                 </div>
             <?php endif; ?>
 
-            <!-- Username  -->
-
-            <?php if ($validation->getError('name')): ?>
-                <div class="d-block text-danger" style="margin-top:-25px;margin-bottom: 15px">
-                    <?= $validation->getError('name') ?>
-                </div>
-            <?php endif; ?>
-            <div class="input-group custom">
-                <input type="text" class="form-control form-control-lg" placeholder="Name" name="name"
-                       value="<?= set_value('name') ?>" required/>
-                <div class="input-group-append custom">
-                <span class="input-group-text">
-                    <i class="icon-copy dw dw-user1"></i>
-                </span>
-                </div>
-            </div>
-
             <!-- Login  -->
 
             <?php if ($validation->getError('login_id')): ?>

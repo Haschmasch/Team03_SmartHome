@@ -9,7 +9,7 @@
             <div class="dropdown">
                 <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown">
                     <span class="user-icon bi bi-person"></span>
-                    <span class="user-name"><?=$user->getUsername();?></span>
+                    <span class="user-name"><?=$user->getEmail();?></span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
                     <a class="dropdown-item" href="<?=base_url(route_to('logout'))?>"

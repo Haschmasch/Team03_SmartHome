@@ -4,23 +4,27 @@ namespace App\Entities;
 
 
 /**
- * @property string $username
+ * @property string $token
  * @property string $email
  */
 class User
 {
-    private int $id;
-    private string $username;
     private string $email;
+    private string $token;
 
-    public function __construct(string $username, string $email)
+    public function __construct(string $token, string $email)
     {
-        $this->username = $username;
+        $this->token = $token;
         $this->email = $email;
     }
 
-    public function getUsername(): string
+    public function getEmail(): string
     {
-        return $this->username;
+        return $this->email;
+    }
+
+    public function getToken(): string
+    {
+        return $this->token;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Entities\User;
 use App\Models\UserModel;
 use CodeIgniter\HTTP\RedirectResponse;
 use App\Filters\CIAuth;
@@ -55,16 +56,17 @@ class AuthController extends BaseController
                 'validation' => $this->validator
             ]);
         } else {
-            $is_user = $userModel->checkCredentials(
+            $token = $userModel->checkCredentials(
                 $this->request->getPost('login_id'),
                 $this->request->getPost('password')
             );
 
-            $user = $userModel->getUser($this->request->getPost('login_id'));
 
-            if (!$is_user) {
+
+            if (!$token) {
                 return redirect()->route('login.form')->with('fail', 'Invalid email or password')->withInput();
             } else {
+                $user = new User($token, $this->request->getPost('login_id'));
                 CIAuth::setCIAuth($user);
                 return redirect()->route('home');
             }
@@ -83,29 +85,40 @@ class AuthController extends BaseController
                 ]
             ],
             'password' => [
-                'rules' => 'required',
+                'rules' => 'required|min_length[8]|matches[password_confirm]',
                 'errors' => [
-                    'required' => 'Bitte gib dein Passwort ein'
+                    'required' => 'Bitte gib dein Passwort ein',
+                    'min_length' => 'Passwort muss mindestens 8 Zeichen lang sein',
+                    'matches' => 'Passwörter stimmen nicht überein'
+                ]
+            ],
+            'password_confirm' => [
+                'rules' => 'required|matches[password]|min_length[8]',
+                'errors' => [
+                    'required' => 'Bitte gib dein Passwort ein',
+                    'min_length' => 'Passwort muss mindestens 8 Zeichen lang sein',
+                    'matches' => 'Passwörter stimmen nicht überein'
                 ]
             ]
         ]);
 
         if (!$isValid) {
-            return view('pages/auth/login', [
-                'pageTitle' => 'Login',
+            return view('pages/auth/register', [
+                'pageTitle' => 'Registrieren',
                 'validation' => $this->validator
             ]);
         } else {
-            $is_user = $userModel->checkCredentials(
+            $token = $userModel->registerUser(
                 $this->request->getPost('login_id'),
                 $this->request->getPost('password')
             );
 
-            $user = $userModel->getUser($this->request->getPost('login_id'));
 
-            if (!$is_user) {
-                return redirect()->route('login.form')->with('fail', 'Login fehlgeschlagen')->withInput();
+
+            if (!$token) {
+                return redirect()->route('register.form')->with('fail', 'Registrieren fehlgeschlagen')->withInput();
             } else {
+                $user = new User($token, $this->request->getPost('login_id'));
                 CIAuth::setCIAuth($user);
                 return redirect()->route('home');
             }
