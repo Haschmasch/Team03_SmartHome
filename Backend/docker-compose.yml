@@ -41,55 +41,47 @@ services:
       context: .
       dockerfile: Thermostat/Dockerfile
     environment:
-        ThermostatName: thermostat_1
+        MainUnitURL: ${MAINUNIT_URL}
   
-  # thermostat2:
-  #   image: ${DOCKER_REGISTRY-}thermostat
-  #   depends_on:
-  #       - mainunit
-  #   build:
-  #     context: .
-  #     dockerfile: Thermostat/Dockerfile
-  #   ports:
-  #     - "8087:8080"
-  #   environment:
-  #       ThermostatID: 2
+  thermostat2:
+    image: ${DOCKER_REGISTRY-}thermostat
+    depends_on:
+        - mainunit
+    build:
+      context: .
+      dockerfile: Thermostat/Dockerfile
+    environment:
+        MainUnitURL: ${MAINUNIT_URL}
   
-  # thermostat3:
-  #   image: ${DOCKER_REGISTRY-}thermostat
-  #   depends_on:
-  #       - mainunit
-  #   build:
-  #     context: .
-  #     dockerfile: Thermostat/Dockerfile
-  #   ports:
-  #     - "8088:8080"
-  #   environment:
-  #       ThermostatID: 3
+  thermostat3:
+    image: ${DOCKER_REGISTRY-}thermostat
+    depends_on:
+        - mainunit
+    build:
+      context: .
+      dockerfile: Thermostat/Dockerfile
+    environment:
+        MainUnitURL: ${MAINUNIT_URL}
 
-  # thermostat4:
-  #   image: ${DOCKER_REGISTRY-}thermostat
-  #   depends_on:
-  #       - mainunit
-  #   build:
-  #     context: .
-  #     dockerfile: Thermostat/Dockerfile
-  #   ports:
-  #     - "8089:8080"
-  #   environment:
-  #       ThermostatID: 4
+  thermostat4:
+    image: ${DOCKER_REGISTRY-}thermostat
+    depends_on:
+        - mainunit
+    build:
+      context: .
+      dockerfile: Thermostat/Dockerfile
+    environment:
+        MainUnitURL: ${MAINUNIT_URL}
 
-  # thermostat5:
-  #   image: ${DOCKER_REGISTRY-}thermostat
-  #   depends_on:
-  #       - mainunit
-  #   build:
-  #     context: .
-  #     dockerfile: Thermostat/Dockerfile
-  #   ports:
-  #     - "8090:8080"
-  #   environment:
-  #       ThermostatID: 5
+  thermostat5:
+    image: ${DOCKER_REGISTRY-}thermostat
+    depends_on:
+        - mainunit
+    build:
+      context: .
+      dockerfile: Thermostat/Dockerfile
+    environment:
+        MainUnitURL: ${MAINUNIT_URL}
 
 networks:
   default:

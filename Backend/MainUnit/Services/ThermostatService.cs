@@ -11,7 +11,7 @@ namespace MainUnit.Services
 {
     public class ThermostatService : IThermostatService
     {
-        private readonly IMongoCollection<Thermostat> _thermostatCollection;
+        private readonly IMongoCollection<ThermostatWithURL> _thermostatCollection;
 
 
         public ThermostatService(IOptions<MongoDbSettings> settings)
@@ -22,14 +22,14 @@ namespace MainUnit.Services
             var mongoDatabase = mongoClient.GetDatabase(
                 settings.Value.DatabaseName);
 
-            _thermostatCollection = mongoDatabase.GetCollection<Thermostat>(
+            _thermostatCollection = mongoDatabase.GetCollection<ThermostatWithURL>(
                 settings.Value.ThermostatCollectionName);
         }
 
-        public ThermostatWithURL AddThermostat(ThermostatWithURL thermostat)
+        public ThermostatWithURL AddThermostat(string url)
         {
-            thermostat.Id = ObjectId.GenerateNewId(Convert.ToInt32(thermostat.Id)).ToString();
-            
+            ThermostatWithURL thermostat = new ThermostatWithURL() { URL = url };
+
             if (!ValidateUrl(thermostat.URL))
                 throw new UriFormatException($"A invalid URL was provided. URL:'{thermostat.URL}'.");
 
@@ -60,15 +60,15 @@ namespace MainUnit.Services
             throw new ThermostatNotFoundException($"Thermostat with id: {id} not found");
         }
 
-        public Thermostat GetThermostatByName(string name)
+        public Thermostat GetThermostatByURL(string url)
         {
-            var result = _thermostatCollection.Find(t => t.Name == name);
+            var result = _thermostatCollection.Find(t => t.URL == url);
 
             if(result != null && result.Any())
             {
                 return result.FirstOrDefault();
             }
-            throw new ThermostatNotFoundException($"Thermostat with id: {name} not found");
+            throw new ThermostatNotFoundException($"Thermostat with url: {url} not found");
         }
 
         private bool ValidateUrl(string url)

@@ -87,7 +87,7 @@ namespace MainUnit.Services
             }
 
             var thermostat = CheckThermostatExists(thermostatId);
-            if (thermostat.RoomId != null && thermostat.RoomId != roomId)
+            if (thermostat.RoomId != null && thermostat.RoomId != String.Empty && thermostat.RoomId != roomId)
             {
                 throw new RoomExistsException($"Thermostat already assigned to room with Id:'{thermostat.RoomId}'");
             }

@@ -4,9 +4,9 @@ namespace MainUnit.Services.Interfaces
 {
     public interface IThermostatService
     {
-        public Thermostat AddThermostat(Thermostat thermostat);
+        public ThermostatWithURL AddThermostat(string url);
         public Thermostat GetThermostat(string id);
-        public Thermostat GetThermostatByName(string name);
+        public Thermostat GetThermostatByURL(string name);
         public IList<Thermostat> GetThermostats(int skip, int limit);
     }
 }

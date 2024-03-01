@@ -68,35 +68,27 @@ namespace MainUnit.Controllers
             }
         }
 
-        // POST: api/Thermostats
+        // POST: api/Thermostats?url=http://thermostat1:8080
         [HttpPost]
-        public ActionResult<Thermostat> Register(string name)
+        public ActionResult<ThermostatWithURL> Register(string url)
         {
             try
             {
-                var thermostat = new Thermostat() { Name = name };
-
-                return new ActionResult<Thermostat>(thermostat);
+                var thermostat = _thermostatService.AddThermostat(url);
+                return CreatedAtAction(nameof(Get), new { id = thermostat.Id }, thermostat);
             }
-            catch (Exception ex) when (ex is ThermostatExistsException || ex is UriFormatException)
+            catch(ThermostatExistsException ex)
             {
-                var thermostat = new Thermostat();
-
-                thermostat.Id = name;
-                thermostat.Name = name;
-                thermostat.Temperature = 21;
-                thermostat.RoomId = "";
-
-                var result = _thermostatService.AddThermostat(thermostat);
-
-                return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
+                //This exception always gets thrown when a thermostat tires to register itself upon start, but it already did in a previous startup.
+                var thermostat = _thermostatService.GetThermostat(url);
+                _logger.LogInformation("Thermostat was already registered. Message:\n" + ex.Message);
+                return CreatedAtAction(nameof(Get), new { id = thermostat.Id }, thermostat);
             }
-            catch (Exception ex)
+            catch (UriFormatException ex)
             {
                 _logger.LogError(ex.Message);
                 return BadRequest(ex.Message);
             }
-
         }
     }
 }

@@ -5,6 +5,9 @@ project.lock.json
 *.pyc
 nupkg/
 
+# MongoDb Volume
+MongoStore/
+
 # Visual Studio Code
 .vscode/
 
