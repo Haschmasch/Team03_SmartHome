@@ -40,6 +40,7 @@ services:
 
   thermostat1:
     image: haschmasch/thermostat
+    container_name: ${TERMOSTAT1_NAME}
     depends_on:
         - mainunit
     build:
@@ -47,9 +48,11 @@ services:
       dockerfile: Thermostat/Dockerfile
     environment:
         MainUnitURL: ${MAINUNIT_URL}
+        ThermostatName: ${TERMOSTAT1_NAME}
   
   thermostat2:
     image: haschmasch/thermostat
+    container_name: ${TERMOSTAT2_NAME}
     depends_on:
         - mainunit
     build:
@@ -57,9 +60,11 @@ services:
       dockerfile: Thermostat/Dockerfile
     environment:
         MainUnitURL: ${MAINUNIT_URL}
+        ThermostatName: ${TERMOSTAT2_NAME}
   
   thermostat3:
     image: haschmasch/thermostat
+    container_name: ${TERMOSTAT3_NAME}
     depends_on:
         - mainunit
     build:
@@ -67,9 +72,11 @@ services:
       dockerfile: Thermostat/Dockerfile
     environment:
         MainUnitURL: ${MAINUNIT_URL}
+        ThermostatName: ${TERMOSTAT3_NAME}
 
   thermostat4:
     image: haschmasch/thermostat
+    container_name: ${TERMOSTAT4_NAME}
     depends_on:
         - mainunit
     build:
@@ -77,9 +84,11 @@ services:
       dockerfile: Thermostat/Dockerfile
     environment:
         MainUnitURL: ${MAINUNIT_URL}
+        ThermostatName: ${TERMOSTAT4_NAME}
 
   thermostat5:
     image: haschmasch/thermostat
+    container_name: ${TERMOSTAT5_NAME}
     depends_on:
         - mainunit
     build:
@@ -87,6 +96,7 @@ services:
       dockerfile: Thermostat/Dockerfile
     environment:
         MainUnitURL: ${MAINUNIT_URL}
+        ThermostatName: ${TERMOSTAT5_NAME}
 
 networks:
   default:

@@ -80,7 +80,7 @@ namespace MainUnit.Controllers
             catch(ThermostatExistsException ex)
             {
                 //This exception always gets thrown when a thermostat tires to register itself upon start, but it already did in a previous startup.
-                var thermostat = _thermostatService.GetThermostat(url);
+                var thermostat = _thermostatService.GetThermostatByURL(url);
                 _logger.LogInformation("Thermostat was already registered. Message:\n" + ex.Message);
                 return CreatedAtAction(nameof(Get), new { id = thermostat.Id }, thermostat);
             }

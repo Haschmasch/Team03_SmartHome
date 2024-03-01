@@ -12,7 +12,6 @@ namespace Thermostat
     {
         private readonly HttpClient _httpClient = new HttpClient();
         private readonly Uri _mainUnitUri; 
-        private readonly Uri _requestUri = new("api/Thermostats", UriKind.Relative);
 
         public Startup(IHostApplicationLifetime applicationLifetime)
         {
@@ -45,8 +44,9 @@ namespace Thermostat
         private async void RegisterAtMainUnit()
         {
             Console.WriteLine("Registering at main unit...");
-            string? url = Environment.GetEnvironmentVariable("ASPNETCORE_URLS");
-            url = url?.Replace("+", Dns.GetHostName());
+            string url = Environment.GetEnvironmentVariable("ASPNETCORE_URLS")!;
+            string containerName = Environment.GetEnvironmentVariable("ThermostatName")!;
+            url = url.Replace("+", containerName);
             HttpResponseMessage response = await _httpClient.PostAsync("api/Thermostats?url=" + url, null);
             var thermostatResponse = await response.Content.ReadAsAsync<ThermostatObject>();
 

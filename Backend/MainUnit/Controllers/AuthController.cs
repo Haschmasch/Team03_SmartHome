@@ -15,7 +15,7 @@ namespace MainUnit.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController(IConfiguration configuration, IAuthService authService) : ControllerBase
+    public class AuthController(IAuthService authService) : ControllerBase
     {
         [AllowAnonymous]
         [HttpPost("register")]

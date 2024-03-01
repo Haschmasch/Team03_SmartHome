@@ -1,6 +1,6 @@
 version: '3.4'
-name: heathub
 
+#This a compose file that is used for debugging and testing the main unit, thermostats and the database. The compose.yml for production (includung the frontend) can be found at the root directory of the project.
 services:
 
   mongo:
@@ -35,6 +35,7 @@ services:
 
   thermostat:
     image: ${DOCKER_REGISTRY-}thermostat
+    container_name: ${TERMOSTAT1_NAME}
     depends_on:
         - mainunit
     build:
@@ -42,9 +43,11 @@ services:
       dockerfile: Thermostat/Dockerfile
     environment:
         MainUnitURL: ${MAINUNIT_URL}
+        ThermostatName: ${TERMOSTAT1_NAME}
   
   thermostat2:
     image: ${DOCKER_REGISTRY-}thermostat
+    container_name: ${TERMOSTAT2_NAME}
     depends_on:
         - mainunit
     build:
@@ -52,9 +55,11 @@ services:
       dockerfile: Thermostat/Dockerfile
     environment:
         MainUnitURL: ${MAINUNIT_URL}
+        ThermostatName: ${TERMOSTAT2_NAME}
   
   thermostat3:
     image: ${DOCKER_REGISTRY-}thermostat
+    container_name: ${TERMOSTAT3_NAME}
     depends_on:
         - mainunit
     build:
@@ -62,9 +67,11 @@ services:
       dockerfile: Thermostat/Dockerfile
     environment:
         MainUnitURL: ${MAINUNIT_URL}
+        ThermostatName: ${TERMOSTAT3_NAME}
 
   thermostat4:
     image: ${DOCKER_REGISTRY-}thermostat
+    container_name: ${TERMOSTAT4_NAME}
     depends_on:
         - mainunit
     build:
@@ -72,9 +79,10 @@ services:
       dockerfile: Thermostat/Dockerfile
     environment:
         MainUnitURL: ${MAINUNIT_URL}
+        ThermostatName: ${TERMOSTAT4_NAME}
 
   thermostat5:
-    image: ${DOCKER_REGISTRY-}thermostat
+    container_name: ${TERMOSTAT5_NAME}
     depends_on:
         - mainunit
     build:
@@ -82,6 +90,7 @@ services:
       dockerfile: Thermostat/Dockerfile
     environment:
         MainUnitURL: ${MAINUNIT_URL}
+        ThermostatName: ${TERMOSTAT5_NAME}
 
 networks:
   default:
