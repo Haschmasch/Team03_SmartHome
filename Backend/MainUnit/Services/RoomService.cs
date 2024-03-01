@@ -1,4 +1,5 @@
-﻿using MainUnit.HttpClients;
+﻿using MainUnit.Controllers;
+using MainUnit.HttpClients;
 using MainUnit.Models.Exceptions;
 using MainUnit.Models.Room;
 using MainUnit.Models.RoomTemperature;
@@ -73,7 +74,15 @@ namespace MainUnit.Services
 
         public void RemoveRoom(string id)
         {
-            CheckRoomExists(id);
+            var room = CheckRoomExists(id);
+
+            //Remove roomIds of thermostats associated with room
+            foreach(var thermostatId in room.ThermostatIds)
+            {
+                FilterDefinition<ThermostatWithURL> thermostatFilter = Builders<ThermostatWithURL>.Filter.Eq(r => r.Id, thermostatId);
+                UpdateDefinition<ThermostatWithURL> thermostatUpdate = Builders<ThermostatWithURL>.Update.Set(t => t.RoomId, null);
+                var thermostatUpdateResult = _thermostatCollection.UpdateOne(thermostatFilter, thermostatUpdate);
+            }
 
             _roomCollection.DeleteOne(x => x.Id == id);
         }
@@ -89,14 +98,20 @@ namespace MainUnit.Services
             var thermostat = CheckThermostatExists(thermostatId);
             if (thermostat.RoomId != null && thermostat.RoomId != String.Empty && thermostat.RoomId != roomId)
             {
-                throw new RoomExistsException($"Thermostat already assigned to room with Id:'{thermostat.RoomId}'");
+                //Check if room assigned to thermostat really exists. If it does, throw.
+                if(_roomCollection.Find(r => r.Id == thermostat.RoomId).FirstOrDefault() != null)
+                    throw new RoomExistsException($"Thermostat already assigned to room with Id:'{thermostat.RoomId}'");
             }
+
+            FilterDefinition<ThermostatWithURL> thermostatFilter = Builders<ThermostatWithURL>.Filter.Eq(r => r.Id, thermostatId);
+            UpdateDefinition<ThermostatWithURL> thermostatUpdate = Builders<ThermostatWithURL>.Update.Set(t => t.RoomId, roomId);
+            var thermostatUpdateResult = _thermostatCollection.UpdateOne(thermostatFilter, thermostatUpdate);
 
             room.ThermostatIds.Add(thermostatId);
 
-            FilterDefinition<Room> filter = Builders<Room>.Filter.Eq(r => r.Id, roomId);
-            UpdateDefinition<Room> update = Builders<Room>.Update.AddToSet(r => r.ThermostatIds, thermostatId);
-            var updateResult = _roomCollection.UpdateOne(filter, update);
+            FilterDefinition<Room> roomFilter = Builders<Room>.Filter.Eq(r => r.Id, roomId);
+            UpdateDefinition<Room> roomUpdate = Builders<Room>.Update.AddToSet(r => r.ThermostatIds, thermostatId);
+            var updateResult = _roomCollection.UpdateOne(roomFilter, roomUpdate);
 
             if (updateResult.IsAcknowledged)
                 return room;
