@@ -1,0 +1,93 @@
+version: '3.4'
+name: heathub
+
+services:
+
+  mongo:
+    image: mongo
+    restart: unless-stopped
+    container_name: database
+    environment:
+       #No root username and password are set here because the container is running in the docker bridge network
+       #If a username of password is set here the connection string for the MainUnit needs to be modified
+       MONGO_INITDB_DATABASE: heatHubDb
+    volumes:
+       - ./MongoStore:/data/db
+
+  mainunit:
+    image: haschmasch/mainunit
+    container_name: mainunit
+    depends_on:
+        - mongo
+    build:
+      context: .
+      dockerfile: MainUnit/Dockerfile
+    ports:
+      - "8085:8080"
+    environment:
+        #27017 is the default mongodb port. Since docker comes with a built in dns, the names of the containers can be used (instead of the ip addresses)
+        MongoDbSettings__ConnectionString: mongodb://database:27017
+        #Database and collection names can be freely specified and changed. The API will automatically create the new database/collections
+        MongoDbSettings__DatabaseName: heatHubDb
+        MongoDbSettings__RoomCollectionName: rooms
+        MongoDbSettings__RoomTemperatureCollectionName: roomTemperatures
+        MongoDbSettings__ThermostatCollectionName: thermostats
+        MongoDbSettings__AuthCollectionName: userLogins
+        ASPNETCORE_URLS: http://+:8080
+    volumes:
+        - ./Keys:/home/app/.aspnet/DataProtection-Keys
+
+
+  thermostat1:
+    image: haschmasch/thermostat
+    depends_on:
+        - mainunit
+    build:
+      context: .
+      dockerfile: Thermostat/Dockerfile
+    environment:
+        MainUnitURL: ${MAINUNIT_URL}
+  
+  thermostat2:
+    image: haschmasch/thermostat
+    depends_on:
+        - mainunit
+    build:
+      context: .
+      dockerfile: Thermostat/Dockerfile
+    environment:
+        MainUnitURL: ${MAINUNIT_URL}
+  
+  thermostat3:
+    image: haschmasch/thermostat
+    depends_on:
+        - mainunit
+    build:
+      context: .
+      dockerfile: Thermostat/Dockerfile
+    environment:
+        MainUnitURL: ${MAINUNIT_URL}
+
+  thermostat4:
+    image: haschmasch/thermostat
+    depends_on:
+        - mainunit
+    build:
+      context: .
+      dockerfile: Thermostat/Dockerfile
+    environment:
+        MainUnitURL: ${MAINUNIT_URL}
+
+  thermostat5:
+    image: haschmasch/thermostat
+    depends_on:
+        - mainunit
+    build:
+      context: .
+      dockerfile: Thermostat/Dockerfile
+    environment:
+        MainUnitURL: ${MAINUNIT_URL}
+
+networks:
+  default:
+    driver: bridge

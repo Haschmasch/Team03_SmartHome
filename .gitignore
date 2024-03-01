@@ -1,6 +1,7 @@
-﻿################################################################################
-# Diese .gitignore-Datei wurde von Microsoft(R) Visual Studio automatisch erstellt.
-################################################################################
+﻿/Backend/MainUnit/Dockerfile
+/Backend/MainUnit/Dockerfile
 
-/Backend/MainUnit/Dockerfile
-/Backend/MainUnit/Dockerfile
+#Docker Volume for database storage
+/MongoStore
+#Docker Volumes for ASP.NET Core
+/Keys
