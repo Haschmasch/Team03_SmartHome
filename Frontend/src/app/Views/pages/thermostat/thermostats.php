@@ -30,7 +30,7 @@
 <div class="row pb-10">
 
     <?php
-    $counter = 1;
+    $counter = 0;
     foreach ($thermostats as $thermostat): ?>
         <div class="col-sm-12 col-md-4 mb-30">
             <div class="card card-box">
@@ -43,8 +43,6 @@
                 </div>
             </div>
         </div>
-    <?php
-    $counter++;
-    endforeach; ?>
+    <?php endforeach; ?>
 </div>
 <?= $this->endSection() ?>
