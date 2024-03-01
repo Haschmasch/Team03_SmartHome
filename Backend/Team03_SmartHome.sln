@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Thermostat", "Thermostat\Th
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{C6CCA17E-5D49-4011-916F-FC3D9EEEC44D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MainUnit.Tests", "MainUnit.Tests\MainUnit.Tests.csproj", "{7B5CEA42-92C5-4D43-A446-6324722E59A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thermostat.Tests", "Thermostat.Tests\Thermostat.Tests.csproj", "{471F3953-2289-46E6-A0F7-E97634B6F8BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{C6CCA17E-5D49-4011-916F-FC3D9EEEC44D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6CCA17E-5D49-4011-916F-FC3D9EEEC44D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6CCA17E-5D49-4011-916F-FC3D9EEEC44D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B5CEA42-92C5-4D43-A446-6324722E59A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B5CEA42-92C5-4D43-A446-6324722E59A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B5CEA42-92C5-4D43-A446-6324722E59A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B5CEA42-92C5-4D43-A446-6324722E59A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{471F3953-2289-46E6-A0F7-E97634B6F8BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{471F3953-2289-46E6-A0F7-E97634B6F8BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{471F3953-2289-46E6-A0F7-E97634B6F8BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{471F3953-2289-46E6-A0F7-E97634B6F8BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

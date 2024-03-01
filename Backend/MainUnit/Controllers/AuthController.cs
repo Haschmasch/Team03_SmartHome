@@ -15,7 +15,7 @@ namespace MainUnit.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController(IAuthService authService) : ControllerBase
+    public class AuthController(IAuthService authService, ILogger<AuthController> logger) : ControllerBase
     {
         [AllowAnonymous]
         [HttpPost("register")]
@@ -48,7 +48,8 @@ namespace MainUnit.Controllers
                 }
             }
 
-            return Unauthorized();
+            logger.LogWarning("Invalid credentials.");
+            return Unauthorized("Invalid credentials.");
         }
 
         private string GenerateJwtToken()
