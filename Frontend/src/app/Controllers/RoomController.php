@@ -39,6 +39,7 @@ class RoomController extends BaseController
         $viewData = [
             'pageTitle' => 'Raum bearbeiten',
             'room' => $this->roomModel->getRoom($id),
+            'user' => $this->CIAuth->user(),
         ];
         if (!empty($_POST)) {
             $isValid = $this->validate([
@@ -83,6 +84,7 @@ class RoomController extends BaseController
     {
         $viewData = [
             'pageTitle' => 'Raum hinzufügen',
+            'user' => $this->CIAuth->user(),
         ];
         if (!empty($_POST)) {
             $isValid = $this->validate([

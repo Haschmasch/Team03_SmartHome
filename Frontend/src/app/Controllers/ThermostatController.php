@@ -39,6 +39,7 @@ class ThermostatController extends BaseController
             'pageTitle' => 'Thermostat bearbeiten',
             'thermostat' => $this->thermostatModel->getThermostat($id),
             'rooms' => $this->roomModel->getRooms(),
+            'user' => $this->CIAuth->user(),
         ];
         if (!empty($_POST)) {
             $isValid = $this->validate([

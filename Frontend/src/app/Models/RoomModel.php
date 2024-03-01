@@ -52,7 +52,7 @@ class RoomModel
         }
     }
 
-    public function setRoomTemperature(int $id, float $temperature): bool
+    public function setRoomTemperature(string $id, float $temperature): bool
     {
         /*
             * This is a workaround to update the temperature of a room, as the CI4 automatically parses the jason with {} and this throws an error
@@ -119,8 +119,6 @@ class RoomModel
         try {
             $client = \Config\Services::curlrequest();
             $response = $client->request('GET', 'http://mainunit:8080/api/RoomTemperature?start=2022-01-01&end=' . $currentDate);
-            var_dump($response->getBody());
-            die();
         } catch (\Exception $e) {
             return [];
         }
