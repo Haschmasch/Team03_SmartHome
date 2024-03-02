@@ -56,7 +56,7 @@ class ThermostatController extends BaseController
                 $viewData['validation'] = $this->validator;
                 return view('pages/thermostat/edit', $viewData);
             } else {
-                $roomSet = $this->thermostatModel->setRoom($id, (int)$this->request->getPost('room'));
+                $roomSet = $this->thermostatModel->setRoom($id, $this->request->getPost('room'));
 
                 if (!$roomSet) {
                     return redirect()->route('thermostat.edit', [$id])->with('fail', 'Thermostat konnte dem Raum nicht zugewisesen werden')->withInput();

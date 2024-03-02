@@ -67,23 +67,22 @@ class RoomModel
 
     public function setRoomTemperature(string $id, float $temperature): bool
     {
-        /*
-            * This is a workaround to update the temperature of a room, as the CI4 automatically parses the jason with {} and this throws an error
-            */
         try {
-            $authorization = 'Authorization: Bearer ' . $this->CIAuth->user()->getToken();
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, 'http://mainunit:8080/api/rooms/' . $id . '/temperature');
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $authorization, 'Content-Length: ' . strlen($temperature)));
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $temperature);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_exec($ch);
-            curl_close($ch);
+            $client = \Config\Services::curlrequest();
+
+            $response = $client->request('PUT', 'http://mainunit:8080/api/rooms/' . $id . '/temperature', [
+                'headers' => [
+                    'content-type' => 'application/json',
+                    'authorization' => 'Bearer ' . $this->CIAuth->user()->getToken(),
+                ],
+                'json' => $temperature
+            ]);
+
+            return true;
+
         } catch (\Exception $e) {
             return false;
         }
-        return true;
     }
 
     public function createRoom(string $name): bool
