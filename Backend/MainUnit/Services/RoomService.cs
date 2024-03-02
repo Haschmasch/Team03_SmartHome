@@ -148,17 +148,24 @@ namespace MainUnit.Services
                 }
                 client = new ThermostatClient(thermostat.URL);
                 thermostat.Temperature = temperature;
-                var task = client.UpdateTemperatureAsync(thermostat.Temperature);
-                //Only update the temperature of the thermostat, if the 
-                if (task.GetAwaiter().GetResult())
+                try
                 {
-                    FilterDefinition<ThermostatWithURL> thermostatFilter = Builders<ThermostatWithURL>.Filter.Eq(r => r.Id, thermostat.Id);
-                    UpdateDefinition<ThermostatWithURL> thermostatUpdate = Builders<ThermostatWithURL>.Update.Set(r => r.Temperature, thermostat.Temperature);
-                    _thermostatCollection.UpdateOne(thermostatFilter, thermostatUpdate);
-                }
-                else
+                    var task = client.UpdateTemperatureAsync(thermostat.Temperature);
+                    //Only update the temperature of the thermostat, if the thermostat can be reached.
+                    if (task.GetAwaiter().GetResult())
+                    {
+                        FilterDefinition<ThermostatWithURL> thermostatFilter = Builders<ThermostatWithURL>.Filter.Eq(r => r.Id, thermostat.Id);
+                        UpdateDefinition<ThermostatWithURL> thermostatUpdate = Builders<ThermostatWithURL>.Update.Set(r => r.Temperature, thermostat.Temperature);
+                        _thermostatCollection.UpdateOne(thermostatFilter, thermostatUpdate);
+                    }
+                    else
+                    {
+                        _logger.LogError("Temperature of thermostat could not be set.");
+                    }
+                } 
+                catch (HttpRequestException ex)
                 {
-                    _logger.LogError("Temperature of thermostat could not be set. Thermostat unreachable.");
+                    _logger.LogError($"Thermostat unreachable. Error: {ex.Message}");
                 }
             }
 
