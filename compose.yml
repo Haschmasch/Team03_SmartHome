@@ -19,10 +19,8 @@ services:
     container_name: mainunit
     depends_on:
         - mongo
-    build:
-      context: .
-      dockerfile: MainUnit/Dockerfile
     ports:
+      #Expose port only for debugging purposes
       - "8085:8080"
     environment:
         #27017 is the default mongodb port. Since docker comes with a built in dns, the names of the containers can be used (instead of the ip addresses)
@@ -43,9 +41,6 @@ services:
     container_name: ${TERMOSTAT1_NAME}
     depends_on:
         - mainunit
-    build:
-      context: .
-      dockerfile: Thermostat/Dockerfile
     environment:
         MainUnitURL: ${MAINUNIT_URL}
         ThermostatName: ${TERMOSTAT1_NAME}
@@ -55,9 +50,6 @@ services:
     container_name: ${TERMOSTAT2_NAME}
     depends_on:
         - mainunit
-    build:
-      context: .
-      dockerfile: Thermostat/Dockerfile
     environment:
         MainUnitURL: ${MAINUNIT_URL}
         ThermostatName: ${TERMOSTAT2_NAME}
@@ -67,9 +59,6 @@ services:
     container_name: ${TERMOSTAT3_NAME}
     depends_on:
         - mainunit
-    build:
-      context: .
-      dockerfile: Thermostat/Dockerfile
     environment:
         MainUnitURL: ${MAINUNIT_URL}
         ThermostatName: ${TERMOSTAT3_NAME}
@@ -79,9 +68,6 @@ services:
     container_name: ${TERMOSTAT4_NAME}
     depends_on:
         - mainunit
-    build:
-      context: .
-      dockerfile: Thermostat/Dockerfile
     environment:
         MainUnitURL: ${MAINUNIT_URL}
         ThermostatName: ${TERMOSTAT4_NAME}
@@ -91,9 +77,6 @@ services:
     container_name: ${TERMOSTAT5_NAME}
     depends_on:
         - mainunit
-    build:
-      context: .
-      dockerfile: Thermostat/Dockerfile
     environment:
         MainUnitURL: ${MAINUNIT_URL}
         ThermostatName: ${TERMOSTAT5_NAME}
@@ -102,9 +85,6 @@ services:
     image: ehingerphilipp/frontend
     depends_on:
       - mainunit
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
     ports:
       - "80:80"
 
