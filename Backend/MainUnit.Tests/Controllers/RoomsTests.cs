@@ -23,7 +23,7 @@ namespace MainUnit.Tests.Controllers
         [Test]
         public void Get_InvalidLimit_ShouldReturnBadRequest()
         {
-           _roomService.Setup(item => item.GetRooms(It.IsAny<int>(),It.IsAny<int>()));
+            _roomService.Setup(item => item.GetRooms(It.IsAny<int>(), It.IsAny<int>()));
             var roomsController = new Rooms(_roomService.Object, _logger.Object);
 
             var response = roomsController.Get(0, 0);
@@ -56,7 +56,7 @@ namespace MainUnit.Tests.Controllers
         [Test]
         public void Get_Valid_ShouldReturnRooms()
         {
-            _roomService.Setup(item => item.GetRooms(It.IsAny<int>(), It.IsAny<int>())).Returns(new List<Room>() { new Room()});
+            _roomService.Setup(item => item.GetRooms(It.IsAny<int>(), It.IsAny<int>())).Returns(new List<Room>() { new Room() });
             var roomsController = new Rooms(_roomService.Object, _logger.Object);
 
             var response = roomsController.Get(0, 10);
@@ -103,7 +103,7 @@ namespace MainUnit.Tests.Controllers
             var response = roomsController.Post(room);
 
             Assert.That(response, Is.InstanceOf<CreatedAtActionResult>());
-            CreatedAtActionResult createdAtAction = (CreatedAtActionResult) response;
+            CreatedAtActionResult createdAtAction = (CreatedAtActionResult)response;
             Assert.That(room, Is.EqualTo(createdAtAction.Value!));
         }
 
@@ -142,7 +142,7 @@ namespace MainUnit.Tests.Controllers
                 .Throws(new InvalidIdException());
             var roomsController = new Rooms(_roomService.Object, _logger.Object);
 
-            var response = roomsController.AddThermostat("123","12345");
+            var response = roomsController.AddThermostat("123", "12345");
 
             Assert.That(response.Result, Is.InstanceOf<NotFoundObjectResult>());
         }
@@ -170,7 +170,7 @@ namespace MainUnit.Tests.Controllers
                 .Throws(new RoomNotFoundException());
             var roomsController = new Rooms(_roomService.Object, _logger.Object);
 
-            var response = roomsController.RemoveThermostat("123","12");
+            var response = roomsController.RemoveThermostat("123", "12");
 
             Assert.That(response.Result, Is.InstanceOf<NoContentResult>());
         }
@@ -189,11 +189,11 @@ namespace MainUnit.Tests.Controllers
         [Test]
         public void UpdateTemperature_InvalidId_ShouldReturnNotFound()
         {
-            _roomService.Setup(item => item.SetRoomTemperature(It.IsAny<string>(),It.IsAny<float>()))
+            _roomService.Setup(item => item.SetRoomTemperature(It.IsAny<string>(), It.IsAny<float>()))
                 .Throws(new InvalidIdException());
             var roomsController = new Rooms(_roomService.Object, _logger.Object);
 
-            var response = roomsController.UpdateTemperature("123",21);
+            var response = roomsController.UpdateTemperature("123", 21);
 
             Assert.That(response.Result, Is.InstanceOf<NotFoundObjectResult>());
         }

@@ -1,17 +1,10 @@
 ﻿using MainUnit.Controllers;
 using MainUnit.Helper;
 using MainUnit.Models.Auth;
-using MainUnit.Models.Exceptions;
-using MainUnit.Services;
 using MainUnit.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MainUnit.Tests.Controllers
 {
@@ -56,7 +49,7 @@ namespace MainUnit.Tests.Controllers
             _authService.Setup(item => item.GetUserByName(It.IsAny<string>())).Returns(Task.FromResult(new UserLogin("123", "456")));
             var authController = new AuthController(_authService.Object, _logger.Object);
 
-            var response = authController.Login(new UserLoginTransferObject() { Username = "123", Password = "456789"});
+            var response = authController.Login(new UserLoginTransferObject() { Username = "123", Password = "456789" });
             var result = response.GetAwaiter().GetResult();
             Assert.That(result, Is.InstanceOf<UnauthorizedObjectResult>());
         }

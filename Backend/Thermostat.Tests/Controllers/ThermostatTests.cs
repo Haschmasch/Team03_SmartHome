@@ -1,11 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Thermostat.Controllers;
 using Thermostat.Services.Interfaces;
 
 namespace Thermostat.Tests.Controllers
@@ -24,9 +18,9 @@ namespace Thermostat.Tests.Controllers
         {
             _authThermostatService.Setup(item => item.UpdateTemperature(It.IsAny<float>()))
                 .Returns(new LanguageExt.Common.Result<bool>(true));
-            var authController = new Thermostat.Controllers.Thermostat(_authThermostatService.Object);
+            var thermostatController = new Thermostat.Controllers.Thermostat(_authThermostatService.Object);
 
-            var response = authController.SetTemperature(42);
+            var response = thermostatController.SetTemperature(42);
             Assert.That(response, Is.InstanceOf<OkObjectResult>());
         }
     }

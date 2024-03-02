@@ -1,10 +1,10 @@
-﻿using MainUnit.Models.Auth;
+﻿using LanguageExt.Common;
+using MainUnit.Models.Auth;
+using MainUnit.Models.Exceptions;
 using MainUnit.Models.Settings;
 using MainUnit.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using LanguageExt.Common;
-using MainUnit.Models.Exceptions;
 
 namespace MainUnit.Services
 {

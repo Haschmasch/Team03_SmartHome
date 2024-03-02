@@ -1,6 +1,4 @@
 ﻿using LanguageExt.Common;
-using Microsoft.AspNetCore.Mvc;
-using Thermostat.Models;
 
 namespace Thermostat.Services.Interfaces
 {

@@ -1,6 +1,5 @@
 ﻿using MainUnit.Controllers;
 using MainUnit.Models.Exceptions;
-using MainUnit.Models.Room;
 using MainUnit.Models.Thermostat;
 using MainUnit.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;

@@ -22,7 +22,7 @@ namespace MainUnit.HttpClients
             HttpResponseMessage response = await _httpClient.PostAsync(
             $"api/thermostat?temperature={thermostatWithURL.Temperature}", null);
             response.EnsureSuccessStatusCode();
-            
+
             return await response.Content.ReadAsAsync<bool>();
         }
     }

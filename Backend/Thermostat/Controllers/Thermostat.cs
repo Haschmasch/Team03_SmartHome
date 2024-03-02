@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Thermostat.Extensions;
-using Thermostat.Models;
 using Thermostat.Services.Interfaces;
 
 namespace Thermostat.Controllers

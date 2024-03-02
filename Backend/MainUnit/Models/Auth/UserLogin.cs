@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace MainUnit.Models.Auth

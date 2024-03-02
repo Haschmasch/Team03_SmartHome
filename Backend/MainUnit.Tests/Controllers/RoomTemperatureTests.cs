@@ -23,10 +23,10 @@ namespace MainUnit.Tests.Controllers
         [Test]
         public void GetByDate_StartSmallerEnd_ShouldReturnBadRequest()
         {
-            _roomTemperatureService.Setup(item => item.GetTemperatureEntries(It.IsAny<DateTime>(),It.IsAny<DateTime>()));
+            _roomTemperatureService.Setup(item => item.GetTemperatureEntries(It.IsAny<DateTime>(), It.IsAny<DateTime>()));
             var roomTemperatureController = new RoomTemperature(_roomTemperatureService.Object, _logger.Object);
 
-            var response = roomTemperatureController.GetByDate(DateTime.Now,DateTime.MinValue);
+            var response = roomTemperatureController.GetByDate(DateTime.Now, DateTime.MinValue);
 
             Assert.That(response.Result, Is.InstanceOf<BadRequestObjectResult>());
         }
@@ -72,7 +72,7 @@ namespace MainUnit.Tests.Controllers
         public void GetByDate_ValidStandToEnd_ShouldReturnEntries()
         {
             _roomTemperatureService.Setup(item => item.GetTemperatureEntries(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
-                .Returns(new List<RoomTemperatureEntry>() { new RoomTemperatureEntry()});
+                .Returns(new List<RoomTemperatureEntry>() { new RoomTemperatureEntry() });
             var roomTemperatureController = new RoomTemperature(_roomTemperatureService.Object, _logger.Object);
 
             var response = roomTemperatureController.GetByDate(DateTime.Now, DateTime.MaxValue);

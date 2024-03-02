@@ -2,8 +2,6 @@ using MainUnit.Models.Exceptions;
 using MainUnit.Models.Thermostat;
 using MainUnit.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
-using System.Net.Http;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -77,7 +75,7 @@ namespace MainUnit.Controllers
                 var thermostat = _thermostatService.AddThermostat(url);
                 return CreatedAtAction(nameof(Get), new { id = thermostat.Id }, thermostat);
             }
-            catch(ThermostatExistsException ex)
+            catch (ThermostatExistsException ex)
             {
                 //This exception always gets thrown when a thermostat tires to register itself upon start, but it already did in a previous startup.
                 var thermostat = _thermostatService.GetThermostatByURL(url);

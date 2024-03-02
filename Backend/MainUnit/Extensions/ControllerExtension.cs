@@ -1,6 +1,5 @@
 ﻿using LanguageExt.Common;
 using MainUnit.Models.Exceptions;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MainUnit.Extensions
@@ -15,7 +14,7 @@ namespace MainUnit.Extensions
                 {
                     return new BadRequestObjectResult(validationException);
                 }
-                
+
                 if (exception is UserAlreadyExistsException)
                 {
                     return new BadRequestObjectResult(exception.Message);

@@ -1,5 +1,4 @@
-﻿using MainUnit.Controllers;
-using MainUnit.HttpClients;
+﻿using MainUnit.HttpClients;
 using MainUnit.Models.Exceptions;
 using MainUnit.Models.Room;
 using MainUnit.Models.RoomTemperature;
@@ -77,7 +76,7 @@ namespace MainUnit.Services
             var room = CheckRoomExists(id);
 
             //Remove roomIds of thermostats associated with room
-            foreach(var thermostatId in room.ThermostatIds)
+            foreach (var thermostatId in room.ThermostatIds)
             {
                 FilterDefinition<ThermostatWithURL> thermostatFilter = Builders<ThermostatWithURL>.Filter.Eq(r => r.Id, thermostatId);
                 UpdateDefinition<ThermostatWithURL> thermostatUpdate = Builders<ThermostatWithURL>.Update.Set(t => t.RoomId, null);
@@ -99,7 +98,7 @@ namespace MainUnit.Services
             if (thermostat.RoomId != null && thermostat.RoomId != String.Empty && thermostat.RoomId != roomId)
             {
                 //Check if room assigned to thermostat really exists. If it does, throw.
-                if(_roomCollection.Find(r => r.Id == thermostat.RoomId).FirstOrDefault() != null)
+                if (_roomCollection.Find(r => r.Id == thermostat.RoomId).FirstOrDefault() != null)
                     throw new RoomExistsException($"Thermostat already assigned to room with Id:'{thermostat.RoomId}'");
             }
 

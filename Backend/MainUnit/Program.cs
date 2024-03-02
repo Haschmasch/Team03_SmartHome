@@ -1,9 +1,9 @@
-using System.Text;
 using MainUnit.Models.Settings;
 using MainUnit.Services;
 using MainUnit.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace MainUnit
 {
@@ -28,7 +28,7 @@ namespace MainUnit
             builder.Services.AddScoped<IThermostatService, ThermostatService>();
             builder.Services.AddScoped<IRoomTemperatureService, RoomTemperatureService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
-            
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -54,7 +54,7 @@ namespace MainUnit
             });
 
             builder.Services.AddAuthorization();
-            
+
 
             var app = builder.Build();
 

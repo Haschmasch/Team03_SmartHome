@@ -1,8 +1,5 @@
-﻿using System.Net.Http.Headers;
-using LanguageExt.Common;
-using LanguageExt.Pipes;
+﻿using LanguageExt.Common;
 using Thermostat.Data;
-using Thermostat.Models;
 using Thermostat.Services.Interfaces;
 
 namespace Thermostat.Services
