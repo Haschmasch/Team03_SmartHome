@@ -16,11 +16,11 @@ namespace MainUnit.HttpClients
                 .Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public async Task<bool> UpdateThermostatAsync(ThermostatWithURL thermostatWithURL)
+        public async Task<bool> UpdateTemperatureAsync(float temperature)
         {
             //TODO Change API Route to route of thermostat
             HttpResponseMessage response = await _httpClient.PostAsync(
-            $"api/thermostat?temperature={thermostatWithURL.Temperature}", null);
+            $"api/thermostat?temperature={temperature}", null);
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadAsAsync<bool>();

@@ -98,6 +98,16 @@ services:
         MainUnitURL: ${MAINUNIT_URL}
         ThermostatName: ${TERMOSTAT5_NAME}
 
+  frontend:
+    image: ehingerphilipp/frontend
+    depends_on:
+      - mainunit
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+
 networks:
   default:
     driver: bridge

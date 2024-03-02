@@ -118,6 +118,7 @@ namespace MainUnit.Controllers
                 return Ok(result);
             }
             catch (Exception ex) when (ex is RoomNotFoundException ||
+                ex is ThermostatNotFoundException ||
                 ex is ThermostatExistsException ||
                 ex is RoomExistsException ||
                 ex is InvalidIdException)

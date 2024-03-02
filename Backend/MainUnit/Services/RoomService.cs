@@ -20,6 +20,8 @@ namespace MainUnit.Services
 
         public RoomService(IOptions<MongoDbSettings> settings, ILogger<RoomService> logger)
         {
+            _logger = logger;
+
             var mongoClient = new MongoClient(
                 settings.Value.ConnectionString);
 
@@ -34,7 +36,7 @@ namespace MainUnit.Services
 
             _roomTemperatureEntries = mongoDatabase.GetCollection<RoomTemperatureEntry>(
                 settings.Value.RoomTemperatureCollectionName);
-            this._logger = logger;
+
         }
 
         public Room AddRoom(BaseRoom room)
@@ -95,12 +97,7 @@ namespace MainUnit.Services
             }
 
             var thermostat = CheckThermostatExists(thermostatId);
-            if (thermostat.RoomId != null && thermostat.RoomId != String.Empty && thermostat.RoomId != roomId)
-            {
-                //Check if room assigned to thermostat really exists. If it does, throw.
-                if (_roomCollection.Find(r => r.Id == thermostat.RoomId).FirstOrDefault() != null)
-                    throw new RoomExistsException($"Thermostat already assigned to room with Id:'{thermostat.RoomId}'");
-            }
+
 
             FilterDefinition<ThermostatWithURL> thermostatFilter = Builders<ThermostatWithURL>.Filter.Eq(r => r.Id, thermostatId);
             UpdateDefinition<ThermostatWithURL> thermostatUpdate = Builders<ThermostatWithURL>.Update.Set(t => t.RoomId, roomId);
@@ -151,8 +148,18 @@ namespace MainUnit.Services
                 }
                 client = new ThermostatClient(thermostat.URL);
                 thermostat.Temperature = temperature;
-                var task = client.UpdateThermostatAsync(thermostat);
-                task.GetAwaiter().GetResult();
+                var task = client.UpdateTemperatureAsync(thermostat.Temperature);
+                //Only update the temperature of the thermostat, if the 
+                if (task.GetAwaiter().GetResult())
+                {
+                    FilterDefinition<ThermostatWithURL> thermostatFilter = Builders<ThermostatWithURL>.Filter.Eq(r => r.Id, thermostat.Id);
+                    UpdateDefinition<ThermostatWithURL> thermostatUpdate = Builders<ThermostatWithURL>.Update.Set(r => r.Temperature, thermostat.Temperature);
+                    _thermostatCollection.UpdateOne(thermostatFilter, thermostatUpdate);
+                }
+                else
+                {
+                    _logger.LogError("Temperature of thermostat could not be set. Thermostat unreachable.");
+                }
             }
 
             //Update and return room

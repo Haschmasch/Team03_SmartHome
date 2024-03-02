@@ -10,6 +10,6 @@ namespace Thermostat.Services.Interfaces
         ///
         /// <returns>   A Result&lt;bool&gt; </returns>
 
-        public Result<bool> UpdateTemperature(float temperature);
+        public Result<bool> UpdateTemperature(float? temperature);
     }
 }

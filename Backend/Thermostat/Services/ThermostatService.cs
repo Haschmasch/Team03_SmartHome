@@ -7,11 +7,11 @@ namespace Thermostat.Services
     public class ThermostatService : IThermostatService
     {
         /// <inheritdoc />
-        public Result<bool> UpdateTemperature(float temperature)
+        public Result<bool> UpdateTemperature(float? temperature)
         {
-            if (!float.IsNaN(temperature))
+            if (temperature.HasValue && !float.IsNaN(temperature.Value))
             {
-                Memory.Temperature = temperature;
+                Memory.Temperature = temperature.Value;
 
                 Console.WriteLine($"Temperature changed to {Memory.Temperature:F2}°C");
 

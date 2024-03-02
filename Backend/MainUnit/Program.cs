@@ -2,6 +2,7 @@ using MainUnit.Models.Settings;
 using MainUnit.Services;
 using MainUnit.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -17,6 +18,7 @@ namespace MainUnit
                     .AddConsole()
                     .SetMinimumLevel(LogLevel.Information)
             );
+
             // Add services to the container.
             //This gets the MongoDbSettings from the environement variables of the docker-compose file
             //unless they are specified in the appsettings.json. The expected syntax in the docker compose:
@@ -64,8 +66,6 @@ namespace MainUnit
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
-            //app.UseHttpsRedirection();
 
             app.UseAuthentication();
 
