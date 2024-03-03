@@ -33,7 +33,7 @@
                 </div>
             <?php endif; ?>
             <div class="input-group custom">
-                <input type="text" class="form-control form-control-lg" placeholder="Username" name="login_id"
+                <input type="email" class="form-control form-control-lg" placeholder="Username" name="login_id"
                        value="<?= set_value('login_id') ?>" required/>
                 <div class="input-group-append custom">
                 <span class="input-group-text">

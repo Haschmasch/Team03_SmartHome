@@ -104,7 +104,7 @@ class RoomController extends BaseController
                 $roomCreated = $this->roomModel->createRoom($this->request->getPost('name'));
 
                 if (!$roomCreated) {
-                    return redirect()->route('room.create')->with('fail', 'Der Raum könnte nicht hinzugefügt werden')->withInput();
+                    return redirect()->route('room.create')->with('fail', 'Der Raum konnte nicht hinzugefügt werden')->withInput();
                 } else {
                     return redirect()->route('home')->with('success', 'Raum erfolgreich erzeugt');
                 }
