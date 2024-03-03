@@ -142,6 +142,7 @@ class RoomModel
                     'authorization' => 'Bearer ' . $this->CIAuth->user()->getToken(),
                 ],
             ]);
+            return json_decode($response->getBody());
         } catch (\Exception $e) {
             return [];
         }

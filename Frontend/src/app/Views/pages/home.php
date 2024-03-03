@@ -30,7 +30,6 @@ function selectColor(float $temperature): string
     <h2 class="h3 mb-0">Meine Räume</h2>
 </div>
 <div class="row pb-10">
-
     <?php foreach ($rooms as $room): ?>
         <div class="col-xl-3 col-lg-3 col-md-6 mb-20">
             <div class="card-box height-100-p widget-style3">
@@ -72,4 +71,22 @@ function selectColor(float $temperature): string
         </div>
     </div>
 </div>
+<script>
+    var foo = <?= json_encode($graphData) ?>;
+</script>
+<div class="row pb-10">
+    <div class="col-md-12 mb-20">
+        <div class="card-box height-100-p pd-20">
+            <div class="d-flex flex-wrap justify-content-between align-items-center pb-0 pb-md-3">
+                <div class="h5 mb-md-0">Raumtemperaturen</div>
+            </div>
+            <div id="activities-chart"></div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
 <?= $this->endSection() ?>
