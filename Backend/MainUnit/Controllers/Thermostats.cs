@@ -3,8 +3,6 @@ using MainUnit.Models.Thermostat;
 using MainUnit.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace MainUnit.Controllers
 {
     [Route("api/[controller]")]

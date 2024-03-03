@@ -3,8 +3,6 @@ using MainUnit.Models.RoomTemperature;
 using MainUnit.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace MainUnit.Controllers
 {
     [Route("api/[controller]")]
@@ -26,6 +24,7 @@ namespace MainUnit.Controllers
         //GET: api/RoomTemperature?start=2012-12-31T22:00:00.000Z&end=2030-12-31T22:00:00.000Z
         //or: GET: api/RoomTemperature?roomId=507f1f77bcf86cd799439011&start=2012-12-31T22:00:00.000Z&end=2030-12-31T22:00:00.000Z
         //or: GET: api/RoomTemperature?thermostatId=507f1f77bcf86cd799439011&start=2012-12-31T22:00:00.000Z&end=2030-12-31T22:00:00.000Z
+        //or: GET: api/RoomTemperature?roomId=507f1f77bcf86cd799439011&thermostatId=507f1f77bcf86cd799439011&start=2012-12-31T22:00:00.000Z&end=2030-12-31T22:00:00.000Z
         [HttpGet]
         public ActionResult<IList<RoomTemperatureEntry>> Get(string? roomId, string? thermostatId, DateTime start, DateTime end)
         {

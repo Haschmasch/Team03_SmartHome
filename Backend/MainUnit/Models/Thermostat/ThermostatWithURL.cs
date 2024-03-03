@@ -3,6 +3,5 @@
     public class ThermostatWithURL : Thermostat
     {
         public string URL { get; set; } = null!;
-
     }
 }
