@@ -4,35 +4,23 @@ namespace App\Controllers;
 
 use App\Filters\CIAuth;
 use App\Models\RoomModel;
-use App\Models\ThermostatModel;
 
 
 class Home extends BaseController
 {
     private RoomModel $roomModel;
     private CIAuth $CIAuth;
-    private ThermostatModel $thermostatModel;
 
     public function __construct()
     {
         $this->CIAuth = new CIAuth();
         $this->roomModel = new RoomModel();
-        $this->thermostatModel = new ThermostatModel();
     }
 
     public function index(): string
     {
         $rooms = $this->roomModel->getRooms();
         $timeSeries = $this->roomModel->getTemperatureData();
-
-        if (empty($timeSeries)) {
-            return view('pages/home', [
-                'pageTitle' => 'Dashboard',
-                'rooms' => $rooms,
-                'user' => $this->CIAuth->user(),
-                'graphData' => []
-            ]);
-        }
 
         // Assuming $timeSeries is an array of objects with temperature measurements
         $times = [];
@@ -47,7 +35,7 @@ class Home extends BaseController
             ];
         }
         foreach ($times as $time) {
-            $categories[] = '';
+            $categories[] = $time->format('Y-m-d H:i');
         }
 
         // Step 1: Sort $times to ensure chronological order
@@ -87,35 +75,16 @@ class Home extends BaseController
         }
         $graphData['categories'] = $categories;
 
+
+
+
+
+
         return view('pages/home', [
             'pageTitle' => 'Dashboard',
             'rooms' => $rooms,
             'user' => $this->CIAuth->user(),
             'graphData' => $graphData
         ]);
-    }
-
-    public function createDummyData()
-    {
-        $this->roomModel->createRoom('Küche');
-        $this->roomModel->createRoom('Schlafzimmer');
-
-        $thermostats = $this->thermostatModel->getThermostats();
-        $rooms = $this->roomModel->getRooms();
-        $roomIds = [];
-
-        $i = 0;
-        foreach ($rooms as $room) {
-            $this->thermostatModel->setRoom($thermostats[$i]->getID(), $room->getID());
-            $roomIds[] = $room->getID();
-            $i++;
-        }
-
-        $this->roomModel->setRoomTemperature($roomIds[0], 16);
-        $this->roomModel->setRoomTemperature($roomIds[1], 20);
-
-
-        return redirect()->to(base_url(route_to('home')));
-
     }
 }

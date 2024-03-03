@@ -38,7 +38,7 @@ function selectColor(float $temperature): string
                         <div class="widget-data">
                             <div class="weight-700 font-24 text-dark"><?= $room->getTemperature() ?> &deg;C</div>
                             <div class="font-14 text-secondary weight-500">
-                                <?= htmlspecialchars($room->getName(), ENT_QUOTES)?>
+                                <?= $room->getName() ?>
                             </div>
                         </div>
                         <div class="widget-icon">
@@ -71,7 +71,6 @@ function selectColor(float $temperature): string
         </div>
     </div>
 </div>
-<?php if($graphData):?>
 <script>
     var foo = <?= json_encode($graphData) ?>;
 </script>
@@ -85,7 +84,6 @@ function selectColor(float $temperature): string
         </div>
     </div>
 </div>
-<?php endif;?>
 
 
 
