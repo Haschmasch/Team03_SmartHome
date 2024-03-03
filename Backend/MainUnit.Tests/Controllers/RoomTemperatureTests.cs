@@ -26,7 +26,7 @@ namespace MainUnit.Tests.Controllers
             _roomTemperatureService.Setup(item => item.GetTemperatureEntries(It.IsAny<DateTime>(), It.IsAny<DateTime>()));
             var roomTemperatureController = new RoomTemperature(_roomTemperatureService.Object, _logger.Object);
 
-            var response = roomTemperatureController.GetByDate(DateTime.Now, DateTime.MinValue);
+            var response = roomTemperatureController.Get(null,null,DateTime.Now, DateTime.MinValue);
 
             Assert.That(response.Result, Is.InstanceOf<BadRequestObjectResult>());
         }
@@ -38,7 +38,7 @@ namespace MainUnit.Tests.Controllers
                 .Returns(new List<RoomTemperatureEntry>());
             var roomTemperatureController = new RoomTemperature(_roomTemperatureService.Object, _logger.Object);
 
-            var response = roomTemperatureController.GetByDate(DateTime.Now, DateTime.MaxValue);
+            var response = roomTemperatureController.Get(null, null, DateTime.Now, DateTime.MaxValue);
 
 
             Assert.That(response.Result, Is.InstanceOf<NotFoundObjectResult>());
@@ -51,7 +51,7 @@ namespace MainUnit.Tests.Controllers
                 .Throws(new InvalidIdException());
             var roomTemperatureController = new RoomTemperature(_roomTemperatureService.Object, _logger.Object);
 
-            var response = roomTemperatureController.GetByRoomAndDate("123", DateTime.Now, DateTime.MaxValue);
+            var response = roomTemperatureController.Get("123", null, DateTime.Now, DateTime.MaxValue);
 
             Assert.That(response.Result, Is.InstanceOf<BadRequestObjectResult>());
         }
@@ -63,7 +63,7 @@ namespace MainUnit.Tests.Controllers
                 .Throws(new InvalidIdException());
             var roomTemperatureController = new RoomTemperature(_roomTemperatureService.Object, _logger.Object);
 
-            var response = roomTemperatureController.GetByThermostatAndDate("123", DateTime.Now, DateTime.MaxValue);
+            var response = roomTemperatureController.Get(null, "123", DateTime.Now, DateTime.MaxValue);
 
             Assert.That(response.Result, Is.InstanceOf<BadRequestObjectResult>());
         }
@@ -75,7 +75,7 @@ namespace MainUnit.Tests.Controllers
                 .Returns(new List<RoomTemperatureEntry>() { new RoomTemperatureEntry() });
             var roomTemperatureController = new RoomTemperature(_roomTemperatureService.Object, _logger.Object);
 
-            var response = roomTemperatureController.GetByDate(DateTime.Now, DateTime.MaxValue);
+            var response = roomTemperatureController.Get(null, null, DateTime.Now, DateTime.MaxValue);
 
             Assert.That(response.Result, Is.InstanceOf<OkObjectResult>());
             OkObjectResult createdAtAction = (OkObjectResult)response.Result;
