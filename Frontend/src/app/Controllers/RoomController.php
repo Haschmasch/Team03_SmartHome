@@ -51,11 +51,11 @@ class RoomController extends BaseController
                     ]
                 ],
                 'temperature' => [
-                    'rules' => 'required|numeric|greater_than_equal_to[0]|less_than_equal_to[35]',
+                    'rules' => 'required|numeric|greater_than_equal_to[1]|less_than_equal_to[35]',
                     'errors' => [
                         'required' => 'Bitte gib eine Temperatur für den Raum an',
                         'numeric' => 'Die Temperatur muss eine Zahl sein',
-                        'greater_than_equal_to' => 'Die Temperatur muss mindestens 0 Grad betragen',
+                        'greater_than_equal_to' => 'Die Temperatur muss mindestens 1 Grad betragen',
                         'less_than_equal_to' => 'Die Temperatur darf maximal 35 Grad betragen'
                     ]
                 ],
