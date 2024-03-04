@@ -187,6 +187,18 @@ namespace MainUnit.Tests.Controllers
         }
 
         [Test]
+        public void UpdateTemperature_InvalidTemperature_ShouldReturnNotFound()
+        {
+            _roomService.Setup(item => item.SetRoomTemperature(It.IsAny<string>(), It.IsAny<float>()))
+                .Throws(new InvalidIdException());
+            var roomsController = new Rooms(_roomService.Object, _logger.Object);
+
+            var response = roomsController.UpdateTemperature("123", 50);
+
+            Assert.That(response.Result, Is.InstanceOf<BadRequestObjectResult>());
+        }
+
+        [Test]
         public void UpdateTemperature_InvalidId_ShouldReturnNotFound()
         {
             _roomService.Setup(item => item.SetRoomTemperature(It.IsAny<string>(), It.IsAny<float>()))

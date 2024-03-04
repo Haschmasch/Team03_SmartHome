@@ -148,7 +148,7 @@ namespace MainUnit.Controllers
         [HttpPut("{id}/Temperature")]
         public ActionResult<Room> UpdateTemperature(string id, [FromBody] float temperature)
         {
-            if (temperature < 0 && temperature >= 35) 
+            if (temperature < 0 || temperature >= 35) 
             {
                 return BadRequest($"Temperature out of reasonable range. Temperature: {temperature}°C");
             }
