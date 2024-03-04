@@ -25,7 +25,7 @@ class Home extends BaseController
         $rooms = $this->roomModel->getRooms();
         $timeSeries = $this->roomModel->getTemperatureData();
 
-        if(empty($timeSeries)) {
+        if (empty($timeSeries)) {
             return view('pages/home', [
                 'pageTitle' => 'Dashboard',
                 'rooms' => $rooms,
@@ -97,24 +97,25 @@ class Home extends BaseController
 
     public function createDummyData()
     {
+
+        $this->roomModel->createRoom('Küche');
+        $this->roomModel->createRoom('Schlafzimmer');
+
+        $thermostats = $this->thermostatModel->getThermostats();
         $rooms = $this->roomModel->getRooms();
-        if($rooms) {
-            $this->roomModel->createRoom('Küche');
-            $this->roomModel->createRoom('Schlafzimmer');
 
-            $thermostats = $this->thermostatModel->getThermostats();
+        $roomIds = [];
 
-            $roomIds = [];
-
-            foreach ($rooms as $room) {
-                $this->thermostatModel->setRoom($thermostats[0]->getID(), $room->getID());
-                $roomIds[] = $room->getID();
-            }
-
-
-            $this->roomModel->setRoomTemperature($roomIds[0], 16);
-            $this->roomModel->setRoomTemperature($roomIds[1], 20);
+        $i = 0;
+        foreach ($rooms as $room) {
+            $this->thermostatModel->setRoom($thermostats[$i]->getID(), $room->getID());
+            $roomIds[] = $room->getID();
+            $i++;
         }
+
+
+        $this->roomModel->setRoomTemperature($roomIds[0], 16);
+        $this->roomModel->setRoomTemperature($roomIds[1], 20);
 
 
         return redirect()->to(base_url(route_to('home')));

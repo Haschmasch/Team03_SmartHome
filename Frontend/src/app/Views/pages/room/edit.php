@@ -56,13 +56,12 @@
                         <input type="number" class="form-control" name="temperature" id="temperature"
                                value="<?= set_value('temperature', $room->getTemperature()) ?>">
                     </div>
+                    <?php if ($validation->getError('temperature')): ?>
+                        <div class="d-block text-danger" style="margin-top: 15px;margin-bottom: 15px">
+                            <?= $validation->getError('temperature') ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
-                <?php if ($validation->getError('temperature')): ?>
-                    <div class="d-block text-danger" style="margin-top: 15px;margin-bottom: 15px">
-                        <?= $validation->getError('temperature') ?>
-                    </div>
-                <?php endif; ?>
-
             </div>
 
 

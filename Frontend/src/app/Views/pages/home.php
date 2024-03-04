@@ -38,7 +38,7 @@ function selectColor(float $temperature): string
                         <div class="widget-data">
                             <div class="weight-700 font-24 text-dark"><?= $room->getTemperature() ?> &deg;C</div>
                             <div class="font-14 text-secondary weight-500">
-                                <?= $room->getName() ?>
+                                <?= htmlspecialchars($room->getName(), ENT_QUOTES)?>
                             </div>
                         </div>
                         <div class="widget-icon">
