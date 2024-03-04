@@ -1,9 +1,10 @@
-using System.Text;
 using MainUnit.Models.Settings;
 using MainUnit.Services;
 using MainUnit.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace MainUnit
 {
@@ -17,10 +18,11 @@ namespace MainUnit
                     .AddConsole()
                     .SetMinimumLevel(LogLevel.Information)
             );
+
             // Add services to the container.
             //This gets the MongoDbSettings from the environement variables of the docker-compose file
             //unless they are specified in the appsettings.json. The expected syntax in the docker compose:
-            //MongoDbSettings__ConnectionURI = xxx
+            //MongoDbSettings__ConnectionURI: xxx
             builder.Services.Configure<MongoDbSettings>(
             builder.Configuration.GetSection("MongoDbSettings"));
 
@@ -28,7 +30,7 @@ namespace MainUnit
             builder.Services.AddScoped<IThermostatService, ThermostatService>();
             builder.Services.AddScoped<IRoomTemperatureService, RoomTemperatureService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
-            
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -54,7 +56,7 @@ namespace MainUnit
             });
 
             builder.Services.AddAuthorization();
-            
+
 
             var app = builder.Build();
 
@@ -64,8 +66,6 @@ namespace MainUnit
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
-            //app.UseHttpsRedirection();
 
             app.UseAuthentication();
 

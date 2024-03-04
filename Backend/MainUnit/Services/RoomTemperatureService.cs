@@ -51,5 +51,20 @@ namespace MainUnit.Services
                 throw new InvalidIdException($"No thermostat found for id:'{thermostatId}'", ex);
             }
         }
+
+        public IList<RoomTemperatureEntry> GetTemperatureEntriesByRoomAndThermostat(string thermostatId, string roomId, DateTime start, DateTime end)
+        {
+            try
+            {
+                return _roomTemperatureEntries.Find(t => t.Timestamp >= start 
+                && t.Timestamp <= end 
+                && t.Metadata.ThermostatIds.Contains(thermostatId)
+                && t.Metadata.RoomId == roomId).ToList();
+            }
+            catch (FormatException ex)
+            {
+                throw new InvalidIdException($"No thermostat found for id:'{thermostatId}'", ex);
+            }
+        }
     }
 }

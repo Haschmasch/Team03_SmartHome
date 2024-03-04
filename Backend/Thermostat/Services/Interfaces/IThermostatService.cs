@@ -1,6 +1,4 @@
 ﻿using LanguageExt.Common;
-using Microsoft.AspNetCore.Mvc;
-using Thermostat.Models;
 
 namespace Thermostat.Services.Interfaces
 {
@@ -12,6 +10,6 @@ namespace Thermostat.Services.Interfaces
         ///
         /// <returns>   A Result&lt;bool&gt; </returns>
 
-        public Result<bool> UpdateTemperature(float temperature);
+        public Result<bool> UpdateTemperature(float? temperature);
     }
 }

@@ -3,7 +3,6 @@ using MainUnit.Models.Settings;
 using MainUnit.Models.Thermostat;
 using MainUnit.Services.Interfaces;
 using Microsoft.Extensions.Options;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
@@ -64,7 +63,7 @@ namespace MainUnit.Services
         {
             var result = _thermostatCollection.Find(t => t.URL == url);
 
-            if(result != null && result.Any())
+            if (result != null && result.Any())
             {
                 return result.FirstOrDefault();
             }

@@ -1,21 +1,19 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using LanguageExt;
-using LanguageExt.Common;
-using MainUnit.Extensions;
+﻿using MainUnit.Extensions;
 using MainUnit.Helper;
 using MainUnit.Models.Auth;
 using MainUnit.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace MainUnit.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController(IAuthService authService) : ControllerBase
+    public class AuthController(IAuthService authService, ILogger<AuthController> logger) : ControllerBase
     {
         [AllowAnonymous]
         [HttpPost("register")]
@@ -48,7 +46,8 @@ namespace MainUnit.Controllers
                 }
             }
 
-            return Unauthorized();
+            logger.LogWarning("Invalid credentials.");
+            return Unauthorized("Invalid credentials.");
         }
 
         private string GenerateJwtToken()

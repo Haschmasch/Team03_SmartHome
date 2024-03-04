@@ -1,8 +1,5 @@
-﻿using System.Net.Http.Headers;
-using LanguageExt.Common;
-using LanguageExt.Pipes;
+﻿using LanguageExt.Common;
 using Thermostat.Data;
-using Thermostat.Models;
 using Thermostat.Services.Interfaces;
 
 namespace Thermostat.Services
@@ -10,11 +7,11 @@ namespace Thermostat.Services
     public class ThermostatService : IThermostatService
     {
         /// <inheritdoc />
-        public Result<bool> UpdateTemperature(float temperature)
+        public Result<bool> UpdateTemperature(float? temperature)
         {
-            if (!float.IsNaN(temperature))
+            if (temperature.HasValue && !float.IsNaN(temperature.Value))
             {
-                Memory.Temperature = temperature;
+                Memory.Temperature = temperature.Value;
 
                 Console.WriteLine($"Temperature changed to {Memory.Temperature:F2}°C");
 

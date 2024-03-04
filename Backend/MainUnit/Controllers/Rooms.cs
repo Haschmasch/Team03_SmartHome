@@ -3,8 +3,6 @@ using MainUnit.Models.Room;
 using MainUnit.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace MainUnit.Controllers
 {
     [Route("api/[controller]")]
@@ -17,7 +15,7 @@ namespace MainUnit.Controllers
         public Rooms(IRoomService thermostatService, ILogger<Rooms> logger)
         {
             _roomService = thermostatService;
-            this._logger = logger;
+            _logger = logger;
         }
 
         // GET: api/Rooms?skip=0&limit=5
@@ -118,6 +116,7 @@ namespace MainUnit.Controllers
                 return Ok(result);
             }
             catch (Exception ex) when (ex is RoomNotFoundException ||
+                ex is ThermostatNotFoundException ||
                 ex is ThermostatExistsException ||
                 ex is RoomExistsException ||
                 ex is InvalidIdException)

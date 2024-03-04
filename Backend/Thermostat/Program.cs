@@ -1,9 +1,4 @@
-
-using System.Net.Http.Headers;
-using System.Net.Http;
 using Thermostat;
-using Thermostat.Data;
-using Thermostat.Models;
 using Thermostat.Services;
 using Thermostat.Services.Interfaces;
 

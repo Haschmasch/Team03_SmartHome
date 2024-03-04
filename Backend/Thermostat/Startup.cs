@@ -1,7 +1,5 @@
 using Newtonsoft.Json;
-using System.Net;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using Thermostat.Data;
 using Thermostat.Models;
 using Thermostat.Models.Auth;
@@ -11,7 +9,7 @@ namespace Thermostat
     public class Startup
     {
         private readonly HttpClient _httpClient = new HttpClient();
-        private readonly Uri _mainUnitUri; 
+        private readonly Uri _mainUnitUri;
 
         public Startup(IHostApplicationLifetime applicationLifetime)
         {
@@ -38,7 +36,7 @@ namespace Thermostat
 
             var bearerToken = await response.Content.ReadAsStringAsync();
 
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",  JsonConvert.DeserializeObject<Token>(bearerToken)?.token);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", JsonConvert.DeserializeObject<Token>(bearerToken)?.token);
         }
 
         private async void RegisterAtMainUnit()

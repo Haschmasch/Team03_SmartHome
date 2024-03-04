@@ -26,7 +26,7 @@ services:
     environment:
         #27017 is the default mongodb port. Since docker comes with a built in dns, the names of the containers can be used (instead of the ip addresses)
         MongoDbSettings__ConnectionString: mongodb://database:27017
-        #Database and collection names can be freely specified and changed. The API will automatically create the new database/collections
+        #Database and collection names can be freely specified and changed. The MongoDb driver will automatically create the new database/collections
         MongoDbSettings__DatabaseName: heatHubDb
         MongoDbSettings__RoomCollectionName: rooms
         MongoDbSettings__RoomTemperatureCollectionName: roomTemperatures
