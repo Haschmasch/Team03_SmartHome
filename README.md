@@ -14,3 +14,4 @@ Thema 1 - Php / ASP.net core/ MongoDB
  - Der Port für die API (mainunit) sollte nur zu testzwecken published werden.
  - Da PHP serverseitiges Rendering verwendet, ist über den Browser nur die Kommunikation zwischen Frontend und Browser sichtbar. Alle anderen Requesets laufen innerhalb des Docker-Netzwerk ab.
  - Im Frontend steht ein Button zum anlegen von Dummy-Daten bereit. Dieser kann nur einmalig betätigt werden.
+ - Für die lokalisierung der API Endpunkte kann der beigefügte Postman Workspace verwendet werden
