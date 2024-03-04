@@ -10,6 +10,7 @@ $routes->group('', static function ($routes) {
     $routes->group('', ['filter' => 'cifilter:auth'], static function ($routes) {
         $routes->get('/', 'Home::index');
         $routes->get('home', 'Home::index', ['as' => 'home']);
+        $routes->get('home/dummydata', 'Home::createDummyData', ['as' => 'home.dummydata']);
         $routes->get('thermostats', 'ThermostatController::index', ['as' => 'thermostats']);
         $routes->group('thermostat', static function ($routes) {
             $routes->get('', 'ThermostatController::view', ['as' => 'thermostat']);

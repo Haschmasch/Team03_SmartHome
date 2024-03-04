@@ -29,9 +29,9 @@
 
             <!-- Room -->
             <div class="row">
-                <div class="col-md-10 col-sm-12">
-                    <label class="col-sm-12 col-md-2 col-form-label" for="name">Raum Name</label>
-                    <div class="col-sm-12 col-md-10">
+                <div class="col-md-12 col-sm-12">
+                    <div class="form-group">
+                        <label>Raum Name</label>
                         <input class="form-control" type="text" placeholder="Raum Name" id="name" name="name">
                     </div>
                     <?php if ($validation->getError('name')): ?>
@@ -39,11 +39,15 @@
                             <?= $validation->getError('name') ?>
                         </div>
                     <?php endif; ?>
+
                 </div>
-                <div class="col-md-2 col-sm-12">
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
                     <div class="form-group">
-                        <label>Bestätigen</label>
-                        <input type="submit" class="btn btn-success" value="Bestätigen">
+                        <label>
+                            <input type="submit" class="btn btn-success" value="Bestätigen">
+                        </label>
                     </div>
                 </div>
             </div>

@@ -54,7 +54,7 @@
                     <div class="form-group">
                         <label>Temperatur</label>
                         <input type="number" class="form-control" name="temperature" id="temperature"
-                               value="<?= set_value('temperature', $room->getTemperature())?>">
+                               value="<?= set_value('temperature', $room->getTemperature()) ?>">
                     </div>
                 </div>
                 <?php if ($validation->getError('temperature')): ?>
@@ -67,10 +67,11 @@
 
 
             <div class="row">
-                <div class="col-md-2 col-sm-12">
+                <div class="col-md-12 col-sm-12">
                     <div class="form-group">
-                        <label>Bestätigen</label>
-                        <input type="submit" class="btn btn-success" value="Bestätigen">
+                        <label>
+                            <input type="submit" class="btn btn-success" value="Bestätigen">
+                        </label>
                     </div>
                 </div>
             </div>

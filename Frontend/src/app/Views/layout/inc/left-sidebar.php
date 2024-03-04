@@ -17,15 +17,18 @@
                     </a>
                 </li>
                 <li>
-                    <a href="<?= base_url(route_to('rooms')) ?>" class="dropdown-toggle no-arrow">
-                        <span class="micon bi bi-door-open"></span>
-                        <span class="mtext">Räume</span>
-                    </a>
-                </li>
-                <li>
                     <a href="<?= base_url(route_to('thermostats')) ?>" class="dropdown-toggle no-arrow">
                         <span class="micon bi bi-speedometer"></span>
                         <span class="mtext">Thermostate</span>
+                    </a>
+                </li>
+                <li>
+                    <div class="dropdown-divider"></div>
+                </li>
+                <li>
+                    <a href="<?= base_url(route_to('home.dummydata')) ?>" class="dropdown-toggle no-arrow">
+                        <span class="micon fa fa-plug"></span>
+                        <span class="mtext">Create Dummy Data</span>
                     </a>
                 </li>
             </ul>
