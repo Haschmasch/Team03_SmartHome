@@ -120,7 +120,8 @@ class AuthController extends BaseController
             } else {
                 $user = new User($token, $this->request->getPost('login_id'));
                 CIAuth::setCIAuth($user);
-                return redirect()->route('home');
+                CIAuth::forget();
+                return redirect()->route('login.form')->with('success', 'Account erstellt')->withInput();
             }
         }
     }

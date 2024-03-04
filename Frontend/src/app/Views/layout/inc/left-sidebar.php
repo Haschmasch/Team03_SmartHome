@@ -1,6 +1,6 @@
 <div class="left-side-bar">
     <div class="brand-logo">
-        <a href="index.html">
+        <a href="<?= base_url(route_to('home')) ?>">
             <img src="/vendors/images/HeatHubLogo.png" alt=""/>
         </a>
         <div class="close-sidebar" data-toggle="left-sidebar-close">
