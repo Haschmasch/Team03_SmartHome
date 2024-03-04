@@ -1,5 +1,5 @@
 var options = {
-	series : foo.series,
+	series : graphData.series,
 	chart: {
 		height: 300,
 		type: 'line',
@@ -39,7 +39,7 @@ var options = {
 		}
 	},
 	xaxis: {
-		categories: foo.categories,
+		categories: graphData.categories,
 		labels:{
 			style:{
 				colors: '#8c9094'
