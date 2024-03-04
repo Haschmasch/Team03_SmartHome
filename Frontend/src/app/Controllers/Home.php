@@ -97,11 +97,13 @@ class Home extends BaseController
 
     public function createDummyData()
     {
+
         $this->roomModel->createRoom('Küche');
         $this->roomModel->createRoom('Schlafzimmer');
 
         $thermostats = $this->thermostatModel->getThermostats();
         $rooms = $this->roomModel->getRooms();
+
         $roomIds = [];
 
         $i = 0;
@@ -110,6 +112,7 @@ class Home extends BaseController
             $roomIds[] = $room->getID();
             $i++;
         }
+
 
         $this->roomModel->setRoomTemperature($roomIds[0], 16);
         $this->roomModel->setRoomTemperature($roomIds[1], 20);
