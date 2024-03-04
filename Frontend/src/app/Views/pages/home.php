@@ -71,6 +71,7 @@ function selectColor(float $temperature): string
         </div>
     </div>
 </div>
+<?php if($graphData):?>
 <script>
     var foo = <?= json_encode($graphData) ?>;
 </script>
@@ -84,6 +85,7 @@ function selectColor(float $temperature): string
         </div>
     </div>
 </div>
+<?php endif;?>
 
 
 

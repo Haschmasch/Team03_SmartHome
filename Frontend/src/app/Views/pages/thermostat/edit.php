@@ -42,7 +42,7 @@
                             <option value="0"<?= is_null($thermostat->getID()) ? ' selected' : '' ?>>Nicht zugewisen
                             </option>
                             <?php foreach ($rooms as $room): ?>
-                                <option value="<?= $room->getID() ?>" <?= $thermostat->getRoomID() === $room->getID() ? 'selected' : '' ?>><?= htmlspecialchars($room->getName(), ENT_QUOTES)?></option>
+                                <option value="<?= $room->getID() ?>" <?= $thermostat->getRoomID() === $room->getID() ? 'selected' : '' ?>><?= $room->getName() ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
