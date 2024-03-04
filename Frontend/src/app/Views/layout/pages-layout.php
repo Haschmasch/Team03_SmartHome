@@ -45,7 +45,7 @@
 <script src="/vendors/scripts/process.js"></script>
 <script src="/vendors/scripts/layout-settings.js"></script>
 <script src="/src/plugins/apexcharts/apexcharts.min.js"></script>
-<script src="/vendors/scripts/dashboard3.js"></script>
+<script src="/vendors/scripts/graph-data.js"></script>
 <?= $this->renderSection('scripts') ?>
 </body>
 </html>

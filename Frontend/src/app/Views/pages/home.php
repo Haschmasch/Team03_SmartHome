@@ -73,7 +73,7 @@ function selectColor(float $temperature): string
 </div>
 <?php if($graphData):?>
 <script>
-    var foo = <?= json_encode($graphData) ?>;
+    var graphData = <?= json_encode($graphData) ?>;
 </script>
 <div class="row pb-10">
     <div class="col-md-12 mb-20">
