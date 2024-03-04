@@ -148,6 +148,11 @@ namespace MainUnit.Controllers
         [HttpPut("{id}/Temperature")]
         public ActionResult<Room> UpdateTemperature(string id, [FromBody] float temperature)
         {
+            if(temperature < 0  && temperature > 40) 
+            {
+                return BadRequest($"Temperature out of supported range. Temperature: {temperature}°C");
+            }
+
             try
             {
                 var result = _roomService.SetRoomTemperature(id, temperature);
