@@ -34,7 +34,7 @@
     foreach ($thermostats as $thermostat): ?>
         <div class="col-sm-12 col-md-4 mb-30">
             <div class="card card-box">
-                <div class="card-header"><?= !is_null($thermostat->getRoomID()) ? $rooms[$thermostat->getRoomID()]->getName() : "Nicht zugewisen" ?></div>
+                <div class="card-header"><?= !is_null($thermostat->getRoomID()) ? $rooms[$thermostat->getRoomID()]->getName() : "Nicht zugewiesen" ?></div>
                 <div class="card-body">
                     <h5 class="card-title">Thermostat - <?= $counter?></h5>
                     <p class="card-text"><?= $thermostat->getTemperature() ?> &deg;C</p>
