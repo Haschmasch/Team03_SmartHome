@@ -1,0 +1,32 @@
+name: Security Inspection
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  static-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'  # Use the PHP version of your project
+          extensions: mbstring, tokenizer
+
+      - name: Install dependencies
+        run: composer install --no-progress --prefer-dist
+
+      - name: Run PHPStan (Static Analysis)
+        run: vendor/bin/phpstan analyse Frontend/src/app --level=max
+
+      #- name: Run PHP Security Audit (phpcs-security-audit)
+       # run: |
+        #  composer require phpcs-security-audit --dev
+         # vendor/bin/phpcs --standard=vendor/pheromone/phpcs-security-audit/security.xml .
