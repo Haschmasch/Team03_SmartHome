@@ -21,7 +21,7 @@ jobs:
           extensions: mbstring, tokenizer
 
       - name: Install dependencies
-        run: composer install --no-progress --prefer-dist
+        run: composer install --no-progress --prefer-dist --working-fir=Fronteend/src
 
       - name: Run PHPStan (Static Analysis)
         run: vendor/bin/phpstan analyse Frontend/src/app --level=max
