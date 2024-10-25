@@ -15,7 +15,8 @@
         "ext-json": "*",
         "ext-mbstring": "*",
         "laminas/laminas-escaper": "^2.9",
-        "psr/log": "^1.1"
+        "psr/log": "^1.1",
+        "phpstan/phpstan": "^1.10"
     },
     "require-dev": {
         "codeigniter/coding-standard": "^1.7",
@@ -62,6 +63,7 @@
         "sort-packages": true
     },
     "scripts": {
-        "test": "phpunit"
+        "test": "phpunit",
+        "phpstan": "phpstan analyse --level=max src"
     }
 }
