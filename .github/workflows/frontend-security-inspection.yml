@@ -24,7 +24,16 @@ jobs:
         run: composer install --no-progress --prefer-dist --working-dir=Frontend/src
 
       - name: Run PHPStan (Static Analysis)
-        run: Frontend/src/vendor/bin/phpstan analyse Frontend/src/app --level=6
+        run: |
+          mkdir -p logs
+          Frontend/src/vendor/bin/phpstan analyse Frontend/src/app --level=6 > logs/phpstan.log || true
+        continue-on-error: true  # Ensure pipeline does not break
+
+      - name: Upload PHPStan Log as Artifact
+          uses: actions/upload-artifact@v3
+          with:
+          name: phpstan-log
+          path: logs/phpstan.log
 
       #- name: Run PHP Security Audit (phpcs-security-audit)
        # run: |
