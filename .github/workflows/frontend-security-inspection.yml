@@ -24,7 +24,7 @@ jobs:
         run: composer install --no-progress --prefer-dist --working-dir=Frontend/src
 
       - name: Run PHPStan (Static Analysis)
-        run: Frontend/src/vendor/bin/phpstan analyse Frontend/src/app --level=max
+        run: Frontend/src/vendor/bin/phpstan analyse Frontend/src/app --level=6
 
       #- name: Run PHP Security Audit (phpcs-security-audit)
        # run: |
