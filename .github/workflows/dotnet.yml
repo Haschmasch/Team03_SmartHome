@@ -21,8 +21,8 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Restore dependencies
-      run: dotnet restore "/Backend/Team03_SmartHome.sln"
+      run: dotnet restore Team03_SmartHome.sln
     - name: Build
-      run: dotnet build "/Backend/Team03_SmartHome.sln" --no-restore
+      run: dotnet build Team03_SmartHome.sln --no-restore
     - name: Test
-      run: dotnet test "/Backend/Team03_SmartHome.sln" --no-build --verbosity normal
+      run: dotnet test Team03_SmartHome.sln --no-build --verbosity normal
