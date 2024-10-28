@@ -20,9 +20,9 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-    #- name: Restore dependencies
-    #  run: dotnet restore
-    #- name: Build
-    #  run: dotnet build --no-restore
+    - name: Restore dependencies
+      run: dotnet restore "../Backend/Team03_SmartHome.sln"
+    - name: Build
+      run: dotnet build "../Backend/Team03_SmartHome.sln" --no-restore
     - name: Test
       run: dotnet test "../Backend/Team03_SmartHome.sln" --no-build --verbosity normal
