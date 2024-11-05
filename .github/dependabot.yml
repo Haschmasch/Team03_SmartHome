@@ -9,6 +9,7 @@ updates:
     directory: "Backend/" # Location of package manifests
     schedule:
       interval: "weekly"
+    open-pull-requests-limit: 25
   - package-ecosystem: "composer" # See documentation for possible values
     directory: "Frontend/src/" # Location of package manifests
     schedule:
