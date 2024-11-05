@@ -14,16 +14,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
       # Run githubaction-a
-      - name: Run GitHub Action A
-        uses: ./.github/workflows/codeql.yml
+      #- name: Run GitHub Action A
+        #uses: ./.github/workflows/codeql.yml
 
       # Run githubaction-b
-      - name: Run GitHub Action B
-        uses: ./.github/workflows/container-scan.yml
+     # - name: Run GitHub Action B
+       # uses: ./.github/workflows/container-scan.yml
 
       # Run githubaction-b
-      - name: Run GitHub Action C
-        uses: ./.github/workflows/dotnet.yml
+     # - name: Run GitHub Action C
+        #uses: ./.github/workflows/dotnet.yml
 
       # Run githubaction-b
       - name: Run GitHub Action D
