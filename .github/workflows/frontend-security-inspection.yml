@@ -1,6 +1,7 @@
 name: Frontend Security Inspection
 
 on:
+  workflow_call:
 
 jobs:
   static-analysis:

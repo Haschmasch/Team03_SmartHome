@@ -1,5 +1,6 @@
 name: Trivy Container Scan
 on:
+  workflow_call:
 permissions:
   contents: read
 jobs:
