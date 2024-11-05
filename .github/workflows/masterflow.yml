@@ -11,20 +11,21 @@ jobs:
   run-githubaction-a-and-b:
     runs-on: ubuntu-latest
     steps:
-      #- name: Checkout repository
-       # uses: actions/checkout@v2
-      # Run githubaction-a
-      #- name: Run GitHub Action A
-        #uses: ./.github/workflows/codeql.yml
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      # Run githubaction-b
-     # - name: Run GitHub Action B
-       # uses: ./.github/workflows/container-scan.yml
+      # Run Static Analysis
+      - name: Run GitHub Action A
+        uses: ./.github/workflows/codeql.yml
 
-      # Run githubaction-b
-     # - name: Run GitHub Action C
-        #uses: ./.github/workflows/dotnet.yml
+      # Run Container Scan
+      - name: Run GitHub Action B
+        uses: ./.github/workflows/container-scan.yml
 
-      # Run githubaction-b
+      # Run Unittests and Pipeline
+      - name: Run GitHub Action C
+        uses: ./.github/workflows/dotnet.yml
+
+      # Run Frontend Inspection
       - name: Run GitHub Action D
         uses: ./.github/workflows/frontend-security-inspection.yml
