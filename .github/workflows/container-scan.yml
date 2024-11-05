@@ -46,8 +46,10 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: 'trivy-results-mainunit.sarif'
+          category: 'Mainunit'
 
       - name: Upload Trivy scan results for Thermostat to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: 'trivy-results-thermostat.sarif'
+          category: 'Thermostat'
