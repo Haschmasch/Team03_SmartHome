@@ -22,17 +22,32 @@ jobs:
       #  run: |
       #    docker build -t docker.io/my-organization/my-app:${{ github.sha }} .
 
-      - name: Run Trivy vulnerability scanner
+      - name: Run Trivy vulnerability scanner for Mainunit
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
           image-ref: 'docker.io/haschmasch/mainunit:latest'
           cache-dir: '/tmp/trivycache'
           format: 'template'
           template: '@/contrib/sarif.tpl'
-          output: 'trivy-results.sarif'
+          output: 'trivy-results-mainunit.sarif'
           severity: 'CRITICAL,HIGH'
 
-      - name: Upload Trivy scan results to GitHub Security tab
+      - name: Run Trivy vulnerability scanner for Thermostat
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'docker.io/haschmasch/thermostat:latest'
+          cache-dir: '/tmp/trivycache'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results-thermostat.sarif'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Upload Trivy scan results for Mainunit to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: 'trivy-results.sarif'
+          sarif_file: 'trivy-results-mainunit.sarif'
+
+      - name: Upload Trivy scan results for Thermostat to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results-thermostat.sarif'
