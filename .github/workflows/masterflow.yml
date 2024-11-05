@@ -27,4 +27,4 @@ jobs:
 
       # Run githubaction-b
       - name: Run GitHub Action D
-        uses: ./.github/workflows/frontend-security-inspection.yml
+        uses: .github/workflows/frontend-security-inspection.yml
