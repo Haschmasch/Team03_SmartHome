@@ -26,7 +26,7 @@ jobs:
       - name: Run PHPStan (Static Analysis)
         run: |
           mkdir -p logs
-          Frontend/src/vendor/bin/phpstan analyse Frontend/src --level=6 > logs/phpstan.log || true
+          Frontend/src/vendor/bin/phpstan analyse Frontend/src/app --level=6 > logs/phpstan.log || true
         continue-on-error: true  # Ensure pipeline does not break
       - name: Upload PHPStan log
         uses: actions/upload-artifact@v3
